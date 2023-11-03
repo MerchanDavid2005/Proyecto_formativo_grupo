@@ -48,7 +48,7 @@
     },
     methods: {
         fetchProductos() {
-            axios.get('http://127.0.0.1:8000/apis/Productos/')
+            axios.get('http://127.0.0.1:8000/api/Producto/')
                 .then(response => {
                     this.productos = response.data;
                 })
@@ -68,7 +68,7 @@
         },
         async fetchProductos() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/apis/Productos/');
+                const response = await axios.get('http://127.0.0.1:8000/api/Producto/');
                 this.productos = response.data;
             } catch (error) {
                 console.log(error);

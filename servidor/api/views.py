@@ -17,10 +17,10 @@ from rest_framework.response import Response
 
 #------------------Parte James /\ ---------------------------------------------------
 
-#------------------Parte James\/ ---------------------------------------------------
 
 
-class ProductosViewSet(viewsets.ModelViewSet):
+class ProductoViewset(ModelViewSet):
+
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
 
@@ -30,18 +30,6 @@ class ProductosViewSet(viewsets.ModelViewSet):
         productos = Producto.objects.filter(Categoria=categoria)
         serializer = ProductoSerializer(productos, many=True)
         return Response(serializer.data)
-
-class CategoriasViewSet(viewsets.ModelViewSet):
-    queryset = Categoria.objects.all()
-    serializer_class = CategoriaSerializer
-#------------------Parte James /\ ---------------------------------------------------
-
-
-
-class ProductoViewset(ModelViewSet):
-
-    queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
 
 class CategoriaViewset(ModelViewSet):
 
