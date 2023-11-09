@@ -1,17 +1,21 @@
 <!-- VistaProductos.vue -->
 <template>
-    <div>
-        <CarritoC/>
-    </div>
+        <div>
+            <encabezado />
+            <router-view/>
+        </div>
 </template>
-  
+
 <script>
-    import CarritoC from '@/components/Carrito.vue';
-    
-    export default {
-        components: {
-            CarritoC,
-        },
-    };
+import Encabezado from '@/components/Encavezado.vue';
+
+export default {
+    components: {
+        Encabezado,
+    },
+};
 </script>
-  
+
+<style>
+/* Estilos adicionales si es necesario */
+</style>

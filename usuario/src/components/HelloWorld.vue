@@ -9,10 +9,18 @@
       <br>
       <br>
       <section>
-        <h1>Visita nuetro</h1>
+        <h1>Visita nuestro</h1>
         <span><h2>Apartado de productos</h2></span>
         <section>
-          
+          <carousel>
+            <!-- Aquí cargarás las imágenes desde tu API -->
+            <carousel-slide
+              v-for="(producto, index) in productos"
+              :key="index"
+            >
+              <img :src="producto.imagen" alt="Producto" class="imgP">
+            </carousel-slide>
+          </carousel>
         </section>
       </section>
     </center>
@@ -20,15 +28,39 @@
 </template>
 
 <script>
+import VueCarousel from 'vue-carousel';
+import axios from 'axios';
+
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+  data() {
+    return {
+      productos: [],
+    };
+  },
+  created() {
+    this.fetchProductos(); // Llama a fetchProductos al crear el componente
+  },
+  methods: {
+    fetchProductos() {
+      axios.get('http://127.0.0.1:8000/api/Producto/')
+        .then(response => {
+          this.productos = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+  },
+  components: {
+    Carousel: VueCarousel.Carousel,
+    CarouselSlide: VueCarousel.CarouselSlide,
+  },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
+<!-- Estilo del carrusel -->
 <style scoped>
 h3 {
   margin: 40px 0 0;

@@ -1,7 +1,13 @@
 <template>
     <center>
-        
-        <div class="Container">
+        <div class="menu-container">
+
+            <ul>
+                
+                <li :class="{ 'active': $route.path === '/Ccorreo' }" class="nav-link" @click="navigateTo('/Ccorreo')">Correo</li>
+            </ul>
+        </div>
+            <div class="Container">
             <ul>
             <li>
                 <center>
@@ -35,7 +41,18 @@
 </template>
 
 <script>
-    
+    import Ccorreo from '@/components/Ccorreo.vue'
+
+    export default {
+    components: {
+        Ccorreo,
+    },
+    methods: {
+        navigateTo(route) {
+        this.$router.push(route);
+        },
+    },
+};
 
 </script>
 

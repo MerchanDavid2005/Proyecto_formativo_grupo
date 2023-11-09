@@ -100,7 +100,7 @@
 }
 
 .p{
-    color: white;
+    color: black;
 }
 
 .imgP{
@@ -190,11 +190,11 @@
         margin-top: 20px;
         text-align: center;
         text-decoration: none;
-        background-color: #E3AF61; 
+        background-color: #0af; 
         color: #fff;
         border-radius: 5px;
         border: 1px solid #E3AF61;
-
+        cursor: pointer;
     }
 
     .carrito:hover{
@@ -236,7 +236,6 @@
         color: red;
     }
     span{
-        color: rgb(255, 255, 255);
     }
     .container{
         width: 100%;
@@ -244,15 +243,15 @@
         flex-wrap: wrap;
     }
 
-    <!-- .card{
-        background-color: rgba(52, 52, 52, 0.701);
+    .card{
+        background-color: rgba(255, 255, 255, 0.701);
         border: 1px solid #ddd;
         padding: 10px;
         margin: 10px;
         text-align: center;
         width: 250px; 
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-    } -->
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    } 
 
     .input-container {
         width: 220px;

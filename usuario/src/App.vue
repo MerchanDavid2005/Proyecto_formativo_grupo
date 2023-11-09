@@ -41,7 +41,7 @@
 }
 
 .navbar {
-  background-color: #131313;
+  background-color: #0af;
   box-shadow: 0px 20px 30px -10px rgb(38, 57, 77);
   text-align: center;
 }
