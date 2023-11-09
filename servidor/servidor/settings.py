@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'corsheaders',
-    'rest_framework'
+    'rest_framework',
+    'correos_app',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +138,13 @@ CORS_ALLOW_HEADERS = [
     'Content-Type',
     'X-CSRFToken',
 ]
+
+
+# Envio de correos
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'servitecalaestacion4@gmail.com'
+EMAIL_HOST_PASSWORD = 'zjbb kbaq emrd oazc'
+EMAIL_USE_TLS = True
