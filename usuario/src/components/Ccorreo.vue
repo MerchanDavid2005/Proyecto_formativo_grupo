@@ -1,22 +1,47 @@
 <template>
     <div>
-        <div class="contai">
-            <h1 class="h1">Formulario de Envío de Correo</h1>
-            <form class="form" id="email-form">
-                <label class="label" for="to">De:</label>
-                <input class="input" type="email" id="to" name="to" required>
-    
-                <label class="label" for="subject">Asunto:</label>
+        <center>
+
+            <div class="menu-container">
+                
+                <ul>
+                    <li class="carrito" @click="navigateTo('/contactoU')">whatsapp</li>
+                </ul>
+            </div>
+        </center>
+            <div class="contai">
+                <h1 class="h1">Formulario de Envío de Correo</h1>
+                <form class="form" id="email-form">
+                    <label class="label" for="to">De:</label>
+                    <input class="input" type="email" id="to" name="to" required>
+                    
+                    <label class="label" for="subject">Asunto:</label>
                 <input class="input" type="text" id="subject" name="subject" required>
     
                 <label for="message">Mensaje:</label>
                 <textarea class="textarea" id="message" name="message" rows="6" required></textarea>
-    
+                
                 <button class="boton" type="submit">Enviar Correo</button>
             </form>
         </div>
     </div>
 </template>
+
+<script>
+    import ContactoV from '@/components/Contacto.vue'
+
+    export default {
+        components: {
+            ContactoV,
+        },
+        methods: {
+            navigateTo(route) {
+            this.$router.push(route);
+            },
+        },
+};
+</script>
+
 <style>
 
 

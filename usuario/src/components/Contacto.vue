@@ -3,8 +3,7 @@
         <div class="menu-container">
 
             <ul>
-                
-                <li :class="{ 'active': $route.path === '/Ccorreo' }" class="nav-link" @click="navigateTo('/Ccorreo')">Correo</li>
+                <li class="carrito" @click="navigateTo('/Ccorreo')">Correo</li>
             </ul>
         </div>
             <div class="Container">
