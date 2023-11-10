@@ -25,14 +25,10 @@ class Producto(models.Model):
     descripcion = models.TextField(null=False)
     cantidad = models.IntegerField()
     precio = models.FloatField()
-#------------------Parte James\/ ---------------------------------------------------
-
-    imagen = models.ImageField(upload_to='producto', default='imagen_default.png')
+    imagen = models.ImageField(upload_to='producto/')
 
     def __str__(self) -> str:
         return self.nombre
-        
-#------------------Parte James /\ ---------------------------------------------------
 
 class Pedido(models.Model):
 

@@ -67,6 +67,7 @@
 
             width: 50%;
             height: 30%;
+            border-radius: 100%;
 
         }
 
@@ -116,7 +117,7 @@
 
             &-barra{
 
-                width: 20%;
+                width: 25%;
                 height: 15px;
                 border-radius: 30px;
                 background: #eee;

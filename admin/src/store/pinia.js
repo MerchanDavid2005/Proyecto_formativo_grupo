@@ -28,6 +28,10 @@ export const useStore = defineStore('storeId', {
         "foto": "https://i.pinimg.com/736x/06/ba/5f/06ba5fde85a79607e31fe26db9545c95.jpg"
 
       },
+
+      datosUsuarioRegister: "",
+      codigoVerificacion: "",
+      usuarioCreado: false,
       
     }
 
@@ -87,9 +91,9 @@ export const useStore = defineStore('storeId', {
 
     },
 
-    async eliminarImagen(modelo){
+    async eliminarImagen(id, modelo){
 
-      const peticionImagen = await fetch(`http://localhost:8000/delete/img/${this.idEliminar}/${modelo}/`)
+      const peticionImagen = await fetch(`http://localhost:8000/delete/img/${id}/${modelo}/`)
 
       return peticionImagen
 
@@ -101,7 +105,7 @@ export const useStore = defineStore('storeId', {
 
       try{
 
-        await this.eliminarImagen(modelo)
+        await this.eliminarImagen(this.idEliminar, modelo)
         const peticion = await fetch(`http://localhost:8000/api/${modelo}/${this.idEliminar}/`, {
 
           method: 'DELETE',
@@ -113,8 +117,7 @@ export const useStore = defineStore('storeId', {
 
       }catch(e){
 
-        alert("Ha habido un error")
-        this.modoEspera = false
+        return "Error"
 
       }
 

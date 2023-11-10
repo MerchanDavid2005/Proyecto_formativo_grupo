@@ -8,28 +8,13 @@ from .serializador import ProductoSerializer, CategoriaSerializer, UsuarioSerial
 from .models import Producto, Categoria, Usuario, Pedido, Servicio
 from django.views.decorators.csrf import csrf_exempt
 import jwt
-
-#------------------Parte James\/ ---------------------------------------------------
-
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-
-#------------------Parte James /\ ---------------------------------------------------
-
-
+from django.core.mail import send_mail
+import random
 
 class ProductoViewset(ModelViewSet):
 
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
-
-    @action(detail=False)
-    def by_Categoria(self, request):#filtro de datos personalisados
-        categoria = self.request.query_params.get('categoria', None)
-        productos = Producto.objects.filter(Categoria=categoria)
-        serializer = ProductoSerializer(productos, many=True)
-        return Response(serializer.data)
 
 class CategoriaViewset(ModelViewSet):
 
@@ -124,8 +109,62 @@ def generar_token(request):
 
     return JsonResponse({"token": token})
 
+@csrf_exempt
+def crear_usuario(request, tipo):
+
+    datos_usuario = json.loads(request.body)
+    nombre_usuario = datos_usuario["usuario"]
+    email_usuario = datos_usuario["email"]
+
+    descripcion = ""
+    receptor_correo = ""
+
+    lista_caracteres = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
     
-            
+    codigo = ""
 
+    caracteres = random.sample(lista_caracteres, k=6)
 
+    for i in caracteres:
 
+        codigo += i
+
+    if(tipo == "Administrador"):
+
+        descripcion = "el usuario {} con el correo {}, quiere registrarse como administrador, el siguiente codigo sera el ultimo paso para registrar al usuario".format(nombre_usuario, email_usuario)
+        receptor_correo = settings.EMAIL_HOST_USER
+
+    else:
+
+        descripcion = "Este es el ultimo paso para estar completamente registrado en serviteca la estacion, solo necesitas copiar el siguiente codigo e ingresarlo en el campo correspondiente"
+        receptor_correo = email_usuario
+
+    asunto = 'Codigo de verificacion'
+    mensaje = """
+
+    <html>
+        <body>
+            <div style='padding:30px; height:300px; background:#eee; border-radius:30px'>
+
+                <h1 style='text-align:center; font-size:45px;'> Nuevo usuario admin </h1> 
+                <p style='font-size:15px; text-align:center;'> {} </p>
+                <p style='text-align:center; font-weight:bold; font-size:40px;'> 
+                    Codigo: <span> {} </span> 
+                </p>
+
+            </div>
+        </body>
+    <html>
+    """.format(descripcion, codigo)
+    emisor = settings.EMAIL_HOST_USER
+    remitente = ["merchangonzalezjuandavid@gmail.com"]
+
+    send_mail(
+        asunto, 
+        '', 
+        emisor,
+        remitente,
+        html_message=mensaje
+    )
+
+    return JsonResponse({"Codigo": codigo})

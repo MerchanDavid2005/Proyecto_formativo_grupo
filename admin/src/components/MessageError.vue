@@ -14,10 +14,10 @@
     .error{
 
         position: absolute;
-        z-index: 1000;
+        z-index: 10000000;
         top: 3%;
         right: 2%;
-        width: 20%;
+        width: 30%;
         height: max-content;
         padding: 15px;
         border-radius: 20px;
@@ -26,6 +26,12 @@
         align-items: flex-start;
         color: #fff;
         background: #f05;
+
+        h1{
+
+            margin: 5px 0;
+
+        }
 
     }
 

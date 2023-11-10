@@ -77,7 +77,7 @@
     .producto-antes{
 
         width: 100%;
-        height: 60%;
+        height: 40%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -85,7 +85,7 @@
 
         &-titulo{
 
-            height: 40%;
+            height: 20%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -95,13 +95,13 @@
 
         table{
 
-            height: 50%;
+            height: 70%;
             width: 100%;
 
             th, td{
 
 
-                @include celdas('15%');
+                @include celdas('10%');
 
 
             }

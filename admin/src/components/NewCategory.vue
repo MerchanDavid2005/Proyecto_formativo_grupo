@@ -2,6 +2,9 @@
     <div class="new-category">
         
         <h1 class="new-category-title"> Registrar nueva categoria </h1>
+        <transition name="error">
+            <p v-if="error" class="error"> Por favor no dejes el campo vacio </p>
+        </transition>
         <div class="new-category-campo">
             <label> Nombre de la categoria:  </label>
             <input v-model="nombre" type="text" placeholder="Nombre">
@@ -24,9 +27,13 @@
 
     let nombre = ref("")
 
+    let error = ref(false)
+
     async function crear(){
 
-        const peticion = await fetch("http://localhost:8000/api/Categoria/", {
+        if(nombre.value != ""){
+
+            const peticion = await fetch("http://localhost:8000/api/Categoria/", {
 
             method: 'POST',
             body: JSON.stringify({
@@ -36,9 +43,15 @@
             }),
             headers: {"content-type" : "application/json"}
 
-        });
+            });
 
-        return peticion
+            return peticion
+
+        }else{
+
+            return "Error"
+
+        }
 
     }
 
@@ -48,17 +61,31 @@
 
         try{
 
-            await crear();
-            emits('ocultar')
-            pinia.getCategorys();
-            nombre.value = "";
-            pinia.modoEspera = false;
-            pinia.success = true
-            setTimeout(() => {
-                
-                pinia.success = false
+            const res = await crear();
+            if(res != "Error"){
 
-            }, 3000);
+                emits('ocultar')
+                pinia.getCategorys();
+                nombre.value = "";
+                pinia.modoEspera = false;
+                pinia.success = true
+                setTimeout(() => {
+                    
+                    pinia.success = false
+
+                }, 3000);
+
+            }else{
+
+                pinia.modoEspera = false
+                error.value = true
+                setTimeout(() => {
+
+                    error.value = false
+
+                }, 3500)
+
+            }
 
         }catch(e){
 
@@ -80,7 +107,7 @@
 
     .new-category{
 
-        height: 40%;
+        height: 45%;
         width: 30%;
         padding: 15px;
         border-radius: 10px;
@@ -96,6 +123,14 @@
 
             text-align: center;
             margin: 30px 0;
+
+        }
+
+        .error{
+
+            text-align: center;
+            margin: 15px 0;
+            color: #f00
 
         }
 
@@ -117,8 +152,9 @@
         &-botones{
 
             width: 100%;
+            height: 100%;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: space-between;
             margin-top: 10px;
 
@@ -135,6 +171,19 @@
             }
 
         }
+
+    }
+
+    .error-enter-active, .error-leave-active{
+
+        transition: all 1s ease;
+
+    }
+
+    .error-enter-from, .error-leave-to{
+
+        transform: translateX(-50px);
+        opacity: 0;
 
     }
 

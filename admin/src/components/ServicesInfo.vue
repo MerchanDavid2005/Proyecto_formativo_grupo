@@ -107,7 +107,7 @@
 
             align-self: flex-start;
             display: flex;
-            width: 50%;
+            width: 100%;
             margin-bottom: 50px;
             align-items: center;
 

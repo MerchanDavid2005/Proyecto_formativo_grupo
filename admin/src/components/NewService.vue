@@ -2,6 +2,9 @@
     <div class="new-service">
         
         <h1 class="new-service-title"> Registrar nuevo servicio </h1>
+        <transition name="error">
+            <p v-if="error" class="error"> Por favor no dejes ningun campo vacio </p>
+        </transition>
         <div class="new-service-campo">
             <label> Nombre del servicio:  </label>
             <input v-model="nombre" type="text" placeholder="Nombre">
@@ -10,7 +13,7 @@
             <label> Foto del servicio:  </label>
             <input type="file" :onchange="valorImagen">
         </div>
-        <div class="new-service-campo">
+        <div class="new-service-campo-descripcion">
             <label> Descripcion del servicio:  </label>
             <textarea v-model="descripcion" rows="5"></textarea>
         </div>
@@ -39,25 +42,49 @@
     let descripcion = ref("Descripcion")
     let precio = ref(1)
 
+    let error = ref(false)
+
     const valorImagen = (img) => imagen.value = img.target.files[0]
+
+    const validar = () => {
+
+        let validado = false
+
+        if(nombre.value != "" && imagen.value != "" && descripcion.value != "" && precio.value != ""){
+
+            validado = true
+
+        }
+
+        return validado
+
+    }
 
     async function crear(){
 
-        let informacionServicio = new FormData();
+        if(validar()){
 
-        informacionServicio.append("nombre", nombre.value);
-        informacionServicio.append("imagen", imagen.value);
-        informacionServicio.append("descripcion", descripcion.value);
-        informacionServicio.append("precio", precio.value);
+            let informacionServicio = new FormData();
 
-        const peticion = await fetch("http://localhost:8000/api/Servicio/", {
+            informacionServicio.append("nombre", nombre.value);
+            informacionServicio.append("imagen", imagen.value);
+            informacionServicio.append("descripcion", descripcion.value);
+            informacionServicio.append("precio", precio.value);
 
-            method: 'POST',
-            body: informacionServicio
+            const peticion = await fetch("http://localhost:8000/api/Servicio/", {
 
-        });
+                method: 'POST',
+                body: informacionServicio
 
-        return peticion
+            });
+
+            return peticion
+
+        }else{
+
+            return "Error"
+
+        }
 
     }
 
@@ -67,20 +94,34 @@
 
         try{
 
-            await crear();
-            emits('ocultar')
-            pinia.getServices();
-            nombre.value = "";
-            imagen.value = "";
-            descripcion.value = "Descripcion";
-            precio.value = 1;
-            pinia.modoEspera = false;
-            pinia.success = true
-            setTimeout(() => {
-                
-                pinia.success = false
+            const res = await crear();
+            if(res != "Error"){
 
-            }, 3000);
+                emits('ocultar')
+                pinia.getServices();
+                nombre.value = "";
+                imagen.value = "";
+                descripcion.value = "Descripcion";
+                precio.value = 1;
+                pinia.modoEspera = false;
+                pinia.success = true
+                setTimeout(() => {
+                    
+                    pinia.success = false
+
+                }, 3000);
+
+            }else{
+
+                pinia.modoEspera = false
+                error.value = true
+                setTimeout(() => {
+
+                    error.value = false
+
+                }, 3500)
+
+            }
 
         }catch(e){
 
@@ -102,8 +143,8 @@
 
     .new-service{
 
-        height: 75%;
-        width: 30%;
+        height: 90%;
+        width: 35%;
         padding: 15px;
         border-radius: 10px;
         background: #fff;
@@ -118,6 +159,14 @@
 
             text-align: center;
             margin: 30px 0;
+
+        }
+
+        .error{
+
+            text-align: center;
+            margin: 15px 0;
+            color: #f00
 
         }
 
@@ -136,7 +185,7 @@
 
         }
 
-        &-campo:nth-child(4){
+        &-campo-descripcion{
 
             display: flex;
             flex-direction: column;
@@ -156,8 +205,9 @@
         &-botones{
 
             width: 100%;
+            height: 100%;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: space-between;
             margin-top: 10px;
 
@@ -174,6 +224,19 @@
             }
 
         }
+
+    }
+
+    .error-enter-active, .error-leave-active{
+
+        transition: all 1s ease;
+
+    }
+
+    .error-enter-from, .error-leave-to{
+
+        transform: translateX(-50px);
+        opacity: 0;
 
     }
 

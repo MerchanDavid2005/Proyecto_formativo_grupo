@@ -3,6 +3,9 @@
     <div class="servicio-despues">
         
         <h1> Editar servicio </h1>
+        <transition name="error">
+            <p v-if="error" class="error"> Por favor no dejes ningun campo vacio </p>
+        </transition>
         <table>
 
             <thead>
@@ -69,27 +72,53 @@
     let descripcion = ref("Descripcion del producto")
     let precio = ref(1)
 
-    const valorImagen = (file) => imagen.value = file.target.files[0] 
+    let error = ref(false)
+
+    const valorImagen = (file) => imagen.value = file.target.files[0]
+
+    const validar = () => {
+
+        let validado = false
+
+        if(nombre.value != "" && imagen.value != "" && descripcion.value != "" && precio.value != ""){
+
+            validado = true
+
+        }
+
+        return validado
+
+    }
 
     async function editarServicio(){
 
-        let service = pinia.listaServicios[ruta.params.id];
+        if(validar()){
 
-        let informacion = new FormData()
+            let service = pinia.listaServicios[ruta.params.id];
 
-        informacion.append("nombre", nombre.value)
-        informacion.append("imagen", imagen.value)
-        informacion.append("descripcion", descripcion.value)
-        informacion.append("precio", precio.value)
+            await pinia.eliminarImagen(service.id, "Servicio")
 
-        const peticion = await fetch(`http://localhost:8000/api/Servicio/${service.id}/`, {
+            let informacion = new FormData()
 
-            method: 'PUT',
-            body: informacion
+            informacion.append("nombre", nombre.value)
+            informacion.append("imagen", imagen.value)
+            informacion.append("descripcion", descripcion.value)
+            informacion.append("precio", precio.value)
 
-        });
+            const peticion = await fetch(`http://localhost:8000/api/Servicio/${service.id}/`, {
 
-        return peticion
+                method: 'PUT',
+                body: informacion
+
+            });
+
+            return peticion
+
+        }else{
+
+            return "Error"
+
+        }
 
     }
 
@@ -99,16 +128,30 @@
 
         try{
 
-            await editarServicio();
-            enrutado.push('/servicios');
-            pinia.getServices();
-            pinia.modoEspera = false
-            pinia.success = true
-            setTimeout(() => {
-                
-                pinia.success = false
+            const res = await editarServicio();
+            if(res != "Error"){
 
-            }, 3000);
+                enrutado.push('/servicios');
+                pinia.getServices();
+                pinia.modoEspera = false
+                pinia.success = true
+                setTimeout(() => {
+                    
+                    pinia.success = false
+
+                }, 3000);
+
+            }else{
+
+                pinia.modoEspera = false
+                error.value = true
+                setTimeout(() => {
+
+                    error.value = false
+
+                }, 3500)
+
+            }
 
         }catch(e){
 
@@ -131,7 +174,7 @@
     .servicio-despues{
 
         width: 100%;
-        height: 35%;
+        height: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -139,11 +182,19 @@
 
         &-titulo{
 
-            height: 40%;
+            height: 20%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 40px;
+
+        }
+
+        .error{
+
+            text-align: center;
+            margin: 15px 0;
+            color: #f00
 
         }
 
@@ -186,6 +237,19 @@
             }
 
         }
+
+    }
+
+    .error-enter-active, .error-leave-active{
+
+        transition: all 1s ease;
+
+    }
+
+    .error-enter-from, .error-leave-to{
+
+        transform: translateX(-50px);
+        opacity: 0;
 
     }
 

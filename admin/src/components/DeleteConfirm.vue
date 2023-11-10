@@ -34,49 +34,73 @@
 
         try{
 
-            await eliminar(modelo)
+            const res = await eliminar(modelo)
 
-            if(modelo == "Producto"){
+            try{
 
-                pinia.getProducts();
+                if(res != "Error"){
 
-            }else if(modelo == "Categoria"){
+                    if(modelo == "Producto"){
 
-                pinia.getCategorys();
+                        pinia.getProducts();
 
-            }else if(modelo == "Servicio"){
+                    }else if(modelo == "Categoria"){
 
-                pinia.getServices()
+                        pinia.getCategorys();
 
-            }else if(modelo == "Pedido"){
+                    }else if(modelo == "Servicio"){
 
-                pinia.getOrders();
+                        pinia.getServices()
 
-            }else{
+                    }else if(modelo == "Pedido"){
 
-                pinia.getUsers();
+                        pinia.getOrders();
+
+                    }else{
+
+                        pinia.getUsers();
+
+                    }
+
+                    emits('ocultar')
+                    pinia.modoEspera = false
+                    pinia.success = true
+
+                    setTimeout(() => {
+                        
+                        pinia.success = false
+
+                    }, 3000);
+
+                }else{
+
+                    pinia.modoEspera = false
+                    pinia.error = true
+                    setTimeout(() => {
+                        
+                        pinia.error = false
+
+                    }, 3000);
+                    emits('ocultar')
+
+                }
+                
+            }catch(e){
+
+                console.log("Error")
 
             }
-            
-            emits('ocultar')
-            pinia.modoEspera = false
-            pinia.success = true
-
-            setTimeout(() => {
-                
-                pinia.success = false
-
-            }, 3000);
 
         }catch(e){
 
             pinia.modoEspera = false
             pinia.error = true
             setTimeout(() => {
-                
+                    
                 pinia.error = false
 
             }, 3000);
+            emits('ocultar')
 
         }
 
@@ -117,6 +141,7 @@
             button:nth-child(1){
 
                 @include botones($forth-color);
+                font-weight: lighter;
                 margin-left: 10px;
                 color: #000;
 
@@ -125,6 +150,7 @@
             button:nth-child(2){
 
                 @include botones($forth-color);
+                font-weight: lighter;
                 margin-left: 10px;
                 color: #000;
 

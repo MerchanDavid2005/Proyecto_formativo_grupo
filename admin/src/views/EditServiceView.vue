@@ -35,11 +35,11 @@
     .body-edit-service{
 
         width: 90%;
-        height: 80%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-evenly;
         padding: 1%;
         position: static;
         z-index: 10;

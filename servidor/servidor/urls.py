@@ -27,6 +27,7 @@ urlpatterns = [
     path('get/products/', views.get_products, name="Traer productos"),
     path('delete/img/<int:id>/<str:modelo>/', views.eliminar_imagen, name="Eliminar cualquier imagen"),
     path('get/token/', views.generar_token),
+    path('send/email/<str:tipo>/', views.crear_usuario)
     
 ]
 

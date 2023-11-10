@@ -3,7 +3,12 @@
     <div class="panel-register">
 
         <h1 class="panel-register-title"> Registrarse </h1>
-        <p style="color: #f00; margin: 10px 0;" v-if="errorContraseña"> Las contraseñas no coinciden </p>
+        <transition name="error">
+            <p style="color: #f00; margin: 10px 0;" v-if="errorContraseña"> Las contraseñas no coinciden </p>
+        </transition>
+        <transition name="error">
+            <p style="color: #f00; margin: 10px 0;" v-if="errorCampos"> Por favor no dejes campos vacios </p>
+        </transition>
         <div class="panel-register-body">
             <div class="panel-register-body-row">
                 <div class="panel-register-body-row-column">
@@ -20,7 +25,7 @@
                 <input v-model="email" type="text" placeholder="Correo">
             </div>
             <div class="panel-register-body-email">
-                <label> Foto:  </label>
+                <label> Foto (opcinal):  </label>
                 <input type="file" :onchange="valorImagen">
             </div>
             <div class="panel-register-body-row">
@@ -46,12 +51,11 @@
 
 <script setup>
 
-    import { ref } from 'vue';
-    import { useRouter } from 'vue-router';
+    import { ref, defineEmits } from 'vue';
     import { useStore } from '@/store/pinia';
 
     const pinia = useStore()
-    const enrutado = useRouter()
+    const emits = defineEmits(['codigo'])
 
     let usuario = ref("")
     let nombre = ref("")
@@ -61,40 +65,79 @@
     let contraseñaVerificar = ref("")
 
     let errorContraseña = ref(false)
+    let errorCampos = ref(false)
 
     const valorImagen = (img) => foto.value = img.target.files[0]
 
-    async function crearUsuario(){
+    const validar = () => {
 
-        let informacion = new FormData()
+        if(usuario.value != "" && nombre.value != "" && email.value != "" && contraseña.value != ""){
 
-        if(contraseña.value == contraseñaVerificar.value){
-
-            informacion.append("usuario", usuario.value)
-            informacion.append("nombre", nombre.value)
-            informacion.append("img", foto.value)
-            informacion.append("email", email.value)
-            informacion.append("password", contraseña.value)
-            informacion.append("rol", "Administrador")
-
-            const peticion = await fetch("http://localhost:8000/api/Usuario/", {
-
-                method: "POST",
-                body: informacion
-
-            });
-
-            return peticion
+            return true
 
         }else{
 
-            errorContraseña.value = true
+            return false
 
+        }
+
+    }
+
+    async function crearUsuario(){
+
+        pinia.datosUsuarioRegister = new FormData()
+
+        if(validar()){
+
+            if(contraseña.value == contraseñaVerificar.value){
+
+                pinia.datosUsuarioRegister.append("usuario", usuario.value)
+                pinia.datosUsuarioRegister.append("nombre", nombre.value)
+                pinia.datosUsuarioRegister.append("foto", foto.value)
+                pinia.datosUsuarioRegister.append("email", email.value)
+                pinia.datosUsuarioRegister.append("contraseña", contraseña.value)
+                pinia.datosUsuarioRegister.append("rol", "Administrador")
+
+                emits('codigo')
+
+                const peticion = await fetch("http://localhost:8000/send/email/Administrador/", {
+
+                    method: 'POST',
+                    body: JSON.stringify({
+
+                        usuario: usuario.value,
+                        email: email.value
+
+                    }),
+                    headers: {"content-type": "application/json"}
+
+                })
+
+                const res = await peticion.json()
+                pinia.codigoVerificacion = res.Codigo
+                return "Correcto"
+
+            }else{
+
+                errorContraseña.value = true
+                setTimeout(() => {
+
+                    errorContraseña.value = false
+                        
+                }, 4000)
+
+                return "Error"
+
+            }
+
+        }else{
+
+            errorCampos.value = true
             setTimeout(() => {
 
-                errorContraseña.value = false
-                    
-            }, 4000)
+                errorCampos.value = false
+
+            }, 3500)
 
             return "Error"
 
@@ -106,21 +149,19 @@
 
         try{
 
-            const respuesta = await crearUsuario();
-
-            if(respuesta !== "Error"){
-
-                await pinia.getUsers();
-                enrutado.push('/');
-
-            }
+            await crearUsuario();
 
         }catch(e){
 
-            console.log(e)
+            emits('codigo')
+            pinia.error = true
+            setTimeout(() => {
+                
+                pinia.error = false
+
+            }, 3000);
 
         }
-
 
     }
 
@@ -131,7 +172,7 @@
     .panel-register{
 
         width: 35%;
-        height: 80%;
+        height: 85%;
         padding: 20px;
         border-radius: 15px;
         display: flex;
@@ -148,7 +189,13 @@
 
         }
 
+        .error{
 
+            text-align: center;
+            margin: 15px 0;
+            color: #f00
+
+        }
 
         &-body{
 
@@ -239,6 +286,19 @@
             height: 70%;
 
         }
+
+    }
+
+    .error-enter-active, .error-leave-active{
+
+        transition: all 1s ease;
+
+    }
+
+    .error-enter-from, .error-leave-to{
+
+        transform: translateX(-50px);
+        opacity: 0;
 
     }
 

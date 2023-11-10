@@ -23,7 +23,7 @@
                     <img :src="pinia.informacionUsuario.foto" alt="">
                     <p> {{ pinia.informacionUsuario.usuario }} </p>
                     <div class="panel-usuario" @click="cerrarSesion" v-show="panelUsuario">
-                        <v-icon name="co-account-logout" scale="2"></v-icon>
+                        <v-icon name="co-account-logout" scale="1.5"></v-icon>
                         <p> Cerrar sesion </p>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
             align-items: center;
             border-right: 3px solid #fff;
             color: #fff;
-            font-size: 25px;
+            font-size: 20px;
             
         }
 
@@ -103,7 +103,7 @@
                 li{
 
                     color: #fff;
-                    font-size: 25px;
+                    font-size: 20px;
                     cursor: pointer;
                     transition: color 0.5s ease;
                     height: 100%;
@@ -122,9 +122,8 @@
     
                 div{
     
-                    border-radius: 100%;
                     width: 20%;
-                    height: 100%;
+                    height: 9vh;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-evenly;
@@ -135,7 +134,7 @@
                     img{
 
                         width: 100%;
-                        height: 70%;
+                        height: 100%;
                         object-fit: contain;
                         margin: 10px 0;
 
@@ -163,7 +162,7 @@
             background: #0af;
             color: #fff;
             border-radius: 0;
-            font-size: 20px;
+            font-size: 15px;
             border-radius: 0 0 10px 10px;
 
         }

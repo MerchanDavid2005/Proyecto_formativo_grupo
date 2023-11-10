@@ -69,7 +69,7 @@
     .servicio-antes{
 
         width: 100%;
-        height: 65%;
+        height: 40%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -92,15 +92,13 @@
 
             th, td{
 
-
                 @include celdas('20%');
-
 
             }
 
             td:nth-child(2), th:nth-child(2){
 
-                @include celdas('10%');
+                @include celdas('5%');
 
             }
 

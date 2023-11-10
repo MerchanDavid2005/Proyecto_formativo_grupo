@@ -17,7 +17,7 @@
         z-index: 1000;
         top: 3%;
         right: 2%;
-        width: 20%;
+        width: 30%;
         height: max-content;
         padding: 15px;
         border-radius: 20px;

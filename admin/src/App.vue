@@ -31,7 +31,6 @@
 
     }catch(e){
 
-      console.log(e)
       pinia.modoEspera = false;
 
     }
