@@ -1,9 +1,10 @@
 <template>
 
-    <div class="pie-pagina">
+    <div class="pie-pagina-comp">
 
-        <h1> Serviteca </h1>
-        <p> Puedes encontrarnos en: <strong> El terminal </strong> </p>
+        <h1> Serviteca la estacion </h1>
+        <p> Puedes encontrarnos en: <strong> Cl. 20a #2-77 a 2-1 </strong> </p>
+        <p> Para mas informacion puedes comunicarte al numero: <strong> +57 312 3215726 </strong> </p>
         
     </div>
 
@@ -11,10 +12,10 @@
 
 <style lang="scss" scoped>
 
-    .pie-pagina{
+    .pie-pagina-comp{
 
         width: 100%;
-        height: 30vh;
+        height: max-content;
         background: #0af;
         color: #fff;
         box-sizing: border-box;
@@ -27,11 +28,13 @@
         h1{
 
             font-size: 50px;
+            margin: 2% 0;
 
         }
 
         p{
 
+            margin: 10px 0;
             font-size: 20px;
 
         }

@@ -10,6 +10,7 @@ class Usuario(models.Model):
     email = models.CharField(max_length=255, null=False)
     contraseña = models.CharField(max_length=30, null=False)
     rol = models.CharField(max_length=50)
+    carrito = models.TextField(default="[]")
 
 class Categoria(models.Model):
 

@@ -26,13 +26,19 @@
 
                 <li>
 
-                    <router-link class="url" to="/"> Contacto </router-link>
+                    <router-link class="url" to="/productos"> Servicios </router-link>
+                    
+                </li>
+
+                <li>
+
+                    <router-link class="url" to="/contacto"> Contacto </router-link>
                     
                 </li>
 
                 <li class="cart">
 
-                    <router-link class="url" to="/"> <v-icon name="md-shoppingcart" scale="1.3"></v-icon> </router-link>
+                    <router-link class="url" to="/carrito"> <v-icon name="md-shoppingcart" scale="1.3"></v-icon> </router-link>
                     
                 </li>
 
@@ -74,7 +80,7 @@
 
         &-title{
 
-            width: 30%;
+            width: 25%;
             height: 60%;
             display: flex;
             align-items: center;
@@ -91,7 +97,7 @@
 
         &-url{
 
-            width: 60%;
+            width: 65%;
             height: 100%;
 
             ul{
@@ -99,9 +105,10 @@
                 width: 100%;
                 height: 100%;
                 display: grid;
+                justify-items: center;
                 align-items: center;
                 list-style: none;
-                grid-template-columns: repeat(3, 25%) 20% 5%;
+                grid-template-columns: repeat(4, 20%) 15% 5%;
 
                 .url{
 

@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 import jwt
 from django.core.mail import send_mail
 import random
+import locale
 
 class ProductoViewset(ModelViewSet):
 
@@ -36,6 +37,12 @@ class ServicioViewset(ModelViewSet):
     queryset = Servicio.objects.all()
     serializer_class = ServicioSerializer
 
+# ----------------------------------------- Clave token ------------------------
+
+clave = "E4f91Al1fp12"
+
+# ----------------------------------------- Clave token ------------------------
+
 def get_products(request):
 
     productos = Producto.objects.all()
@@ -58,7 +65,25 @@ def get_products(request):
 
     return JsonResponse({"productos": lista_productos})
 
-clave = "E4f91Al1fp12"
+def get_product_id(request, id):
+
+    producto = Producto.objects.get(id = id)
+
+    datos_producto = {}
+
+    datos_producto = {
+
+        "id": producto.id,
+        "nombre": producto.nombre,
+        "categoria": producto.categoria.nombre,
+        "imagen": "http://localhost:8000/media/" + producto.imagen.name,
+        "descripcion": producto.descripcion,
+        "cantidad": producto.cantidad,
+        "precio": producto.precio
+
+    }
+
+    return JsonResponse(datos_producto)
 
 def eliminar_imagen(request, id, modelo):
 
@@ -168,3 +193,33 @@ def crear_usuario(request, tipo):
     )
 
     return JsonResponse({"Codigo": codigo})
+
+def get_info_user(request, id):
+
+    usuario = Usuario.objects.get(id = id)
+    infoCarrito = json.loads(usuario.carrito)
+
+    carrito_usuario = []
+
+    for i in infoCarrito:
+
+        carrito_usuario.append({
+
+            "img": i["img"],
+            "nombre": i["nombre"],
+            "precio": i["precio"],
+            "unidades": i["unidades"]
+
+        })
+
+    datos_usuario = {
+
+        "id": usuario.id,
+        "nombre": usuario.nombre,
+        "foto": "http://localhost:8000/media" + usuario.foto.name,
+        "email": usuario.email,
+        "carrito": carrito_usuario
+
+    }
+
+    return JsonResponse({"usuario": datos_usuario})

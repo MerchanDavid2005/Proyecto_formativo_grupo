@@ -31,7 +31,7 @@
 
                             <h1> {{ prd.nombre }} </h1>
                             <p> {{ prd.descripcion }} </p>
-                            <p> Por solo: <strong> {{ prd.precio }} </strong> </p>
+                            <p> Precio: <strong> {{ prd.precio }} </strong> </p>
 
                         </div>
         
@@ -100,18 +100,20 @@
 
     .carrusel-tres-comp{
 
-        width: 100%;
+        width: 90%;
         height: max-content;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-bottom: 10vh;
+        margin: 10vh 0;
+        background: #2cbdff;
+        border-radius: 15px;
 
         &-title{
 
-            margin: 5% 0;
+            margin-top: 5%;
             font-size: 40px;
-            color: #222;
+            color: #fff;
 
         }
 
@@ -120,6 +122,7 @@
             width: 100%;
             height: 50vh;
             overflow: hidden;
+            margin: 10vh 0;
 
             &-body{
 
@@ -138,7 +141,7 @@
 
                     .flechita{
 
-                        color: #0af;
+                        color: #fff;
                         cursor: pointer;
                         position: relative;
                         right: 0%;
@@ -151,6 +154,7 @@
                         height: 100%;
                         display: flex;
                         justify-content: space-evenly;
+                        color: #fff;
 
                         &-img{
 
@@ -161,12 +165,13 @@
 
                         &-data{
 
-                            width: 40%;
+                            width: 50%;
                             height: 100%;
                             display: flex;
                             flex-direction: column;
                             align-items: flex-start;
                             justify-content: space-between;
+                            overflow: auto;
 
                             h1{
         
@@ -176,6 +181,7 @@
     
                             p{
     
+                                margin: 10px 0;
                                 font-size: 20px;
     
                             }

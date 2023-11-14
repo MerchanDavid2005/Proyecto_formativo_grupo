@@ -29,6 +29,26 @@ type Servicio = {
 
 }
 
+type Carrito = {
+
+  readonly id: number,
+  img: string,
+  nombre: string,
+  precio: number,
+  unidades: number
+
+}
+
+type Usuario = {
+
+  readonly id: number,
+  nombre: string,
+  foto: string,
+  email: string,
+  carrito: Carrito []
+
+}
+
 export const useStore = defineStore('storeId', {
   state: () => {
 
@@ -36,11 +56,33 @@ export const useStore = defineStore('storeId', {
 
       listaProductos: [] as Producto [],
       listaCategorias: [] as Categoria [],
-      listaServicios: [] as Servicio []
+      listaServicios: [] as Servicio [],
+
+      listaProductosFiltrar: [] as Producto [],
+
+      informacionUsuario: {} as Usuario,
+      carritoUsuario: [] as Carrito [],
+
+      precioTotalCarrito: 0 as number,
+
+      idProductoEliminar: 0 as number,
+
+      productoParaVerificar: {
+
+        id: 1,
+        nombre: "XXXXX",
+        categoria: "XXX",
+        descripcion: "XXXXXXXX",
+        imagen: "XXXXXX",
+        cantidad: 1,
+        precio: 1
+
+      } as Producto,
 
     }
 
   },
+
   actions:{
 
     async traerProductos(){
@@ -49,7 +91,18 @@ export const useStore = defineStore('storeId', {
 
       const res = await peticion.json()
 
-      this.listaProductos = res.productos
+      this.listaProductos = res.productos.reverse()
+      this.listaProductosFiltrar = this.listaProductos
+
+    },
+
+    async traerProductoPorId(id: number){
+
+      const peticion = await fetch(`http://localhost:8000/get/product/id/${id}/`)
+
+      const res = await peticion.json()
+
+      this.productoParaVerificar = res
 
     },
 
@@ -72,6 +125,18 @@ export const useStore = defineStore('storeId', {
       this.listaServicios = res
 
     },
+
+    async traerInformacionUsuario(){
+
+      const peticion = await fetch("http://localhost:8000/get/info/user/1/")
+
+      const res = await peticion.json()
+
+      this.informacionUsuario = res.usuario
+
+      this.carritoUsuario = res.usuario.carrito
+
+    }
 
   }
 })

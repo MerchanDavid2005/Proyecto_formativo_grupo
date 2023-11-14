@@ -131,18 +131,21 @@
 
     .carrusel-dos-comp{
 
-        width: 100%;
+        width: 90%;
         height: max-content;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-bottom: 10vh;
+        margin: 10vh 0;
+        background: #2cbdff;
+        border-radius: 15px;
 
         &-title{
 
-            margin: 5% 0;
+            margin-top: 5%;
             font-size: 40px;
-            color: #222;
+            color: #fff;
+            font-weight: bold;
 
         }
 
@@ -151,6 +154,7 @@
             width: 100%;
             height: 50vh;
             overflow: hidden;
+            margin: 10vh 0;
 
             &-body{
 
@@ -169,7 +173,7 @@
 
                     .flechita{
 
-                        color: #0af;
+                        color: #fff;
                         cursor: pointer;
                         position: relative;
                         right: 0%;
@@ -184,17 +188,19 @@
                         flex-direction: column;
                         align-items: center;
                         justify-content: space-evenly;
+                        color: #fff;
 
                         img{
 
                             width: 100%;
-                            height: 60%;
+                            height: 50%;
 
                         }
         
                         h1{
         
                             margin: 10px 0;
+                            text-align: center;
         
                         }
 

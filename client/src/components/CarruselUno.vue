@@ -8,10 +8,11 @@
 
             <div class="carrusel-uno-comp-carousel-content">
                 
-                <img v-for="(foto, i) in pinia.listaServicios" :key="i" :src="foto.imagen" :alt="foto.imagen">
-                
-                <img :src="pinia.listaServicios[0].imagen" :alt="pinia.listaServicios[0].nombre">
-                <img :src="pinia.listaServicios[1].imagen" :alt="pinia.listaServicios[1].nombre">
+                <img src="../assets/serviteca.jpeg" alt="">
+                <img src="../assets/ServitecaDos.jpg" alt="">
+                <img src="../assets/UnoAServiteca.jpg" alt="">
+                <img src="../assets/serviteca.jpeg" alt="">
+                <img src="../assets/ServitecaDos.jpg" alt="">
 
             </div>
 
@@ -21,38 +22,33 @@
 
 </template>
 
-<script lang="ts" setup>
-
-    import { useStore } from '../store/pinia'
-
-    const pinia = useStore()
-
-</script>
-
 <style lang="scss" scoped>
 
     .carrusel-uno-comp{
 
-        width: 100%;
+        width: 90%;
         height: max-content;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-bottom: 10vh;
+        margin: 10vh 0;
+        background: #2cbdff;
+        border-radius: 15px;
 
         &-title{
 
-            margin: 5% 0;
+            margin-top: 5%;
             font-size: 50px;
-            color: #222;
+            color: #fff;
 
         }
 
         &-carousel{
 
             width: 80%;
-            height: 55vh;
+            height: 60vh;
             overflow: hidden;
+            margin: 10vh 0;
 
             @keyframes carrusel {
                 

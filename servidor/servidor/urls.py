@@ -25,9 +25,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('get/products/', views.get_products, name="Traer productos"),
+    path('get/product/id/<int:id>/', views.get_product_id),
     path('delete/img/<int:id>/<str:modelo>/', views.eliminar_imagen, name="Eliminar cualquier imagen"),
     path('get/token/', views.generar_token),
-    path('send/email/<str:tipo>/', views.crear_usuario)
+    path('send/email/<str:tipo>/', views.crear_usuario),
+    path('get/info/user/<int:id>/', views.get_info_user),
     
 ]
 
