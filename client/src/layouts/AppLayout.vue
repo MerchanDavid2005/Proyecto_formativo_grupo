@@ -18,9 +18,9 @@
 
             <div class="content-whatsapp">
                 
-                <a href="http://google.com" target="_blank"> 
+                <a href="https://w.app/ApWXCU " target="_blank"> 
                     
-                    <v-icon name="bi-whatsapp" scale="3"></v-icon> 
+                    <v-icon class="icono-whatsapp" name="fa-whatsapp-square" scale="3"></v-icon> 
                 
                 </a>
                 
@@ -96,11 +96,13 @@
                 width: max-content;
                 height: max-content;
                 
-                a{
+                .icono-whatsapp{
 
-                    color: #00ff00;
+                    color: #0f0;
+                    background: #fff;
 
                 }
+
 
                 a:hover{
 

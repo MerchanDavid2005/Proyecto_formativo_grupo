@@ -100,6 +100,7 @@
                     const tokenDecodificado: Codigo = jwtDecode(token)
                     pinia.idUsuario = tokenDecodificado.id
                     await pinia.traerInformacionUsuario()
+                    await pinia.traerPedidos()
                     pinia.sesionIniciada = true
                     pinia.cargando = false
                     enrutado.push('/')

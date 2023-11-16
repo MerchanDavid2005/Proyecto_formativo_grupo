@@ -370,7 +370,7 @@ def enviar_correo_contacto(request):
     <html>
     """.format(informacion_correo["usuario"],informacion_correo["asunto"] ,informacion_correo["mensaje"])
     emisor = settings.EMAIL_HOST_USER
-    remitente = ["merchangonzalezjuandavid@gmail.com"]
+    remitente = [settings.EMAIL_HOST_USER]
 
     send_mail(
         asunto, 
