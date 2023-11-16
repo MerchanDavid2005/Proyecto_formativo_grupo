@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "jwt-decode": "^4.0.0",
     "node-fetch": "^3.3.2",
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^2.1.7",

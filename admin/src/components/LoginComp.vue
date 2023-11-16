@@ -34,7 +34,7 @@
 
         if(usuario.value != "" && password.value != ""){
 
-            const data = await fetch("http://localhost:8000/get/token/", {
+            const data = await fetch("http://localhost:8000/get/token/administrador/", {
 
                 method: 'POST',
                 body: JSON.stringify({

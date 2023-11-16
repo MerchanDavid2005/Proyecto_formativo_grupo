@@ -21,6 +21,8 @@ export const useStore = defineStore('storeId', {
       listaUsuariosFilter: [],
       listaServiciosFilter: [],
 
+      listaProductosPedido: [],
+
       idEliminar: 0,
       informacionUsuario: {
 
@@ -77,10 +79,10 @@ export const useStore = defineStore('storeId', {
     
     async getOrders(){
     
-      const data = await fetch("http://127.0.0.1:8000/api/Pedido/")
+      const data = await fetch("http://127.0.0.1:8000/get/orders/")
       const info = await data.json()
-      this.listaPedidos = info
-    
+      this.listaPedidos = info.pedidos.reverse()
+
     },
 
     async getInfoUser(id){

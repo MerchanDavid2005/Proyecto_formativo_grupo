@@ -31,8 +31,14 @@
                 <tr v-for="(order, i ) in pinia.listaPedidos" :key="i">
 
                     <td> {{ order.usuario }} </td>
-                    <td> {{ order.productos }} </td>
-                    <td> {{ order.fecha }} </td>
+                    <td>
+                        <span v-for="(prd, i) in order.productos" :key="i">
+                            {{ prd }},
+                        </span>
+                    </td>
+                    <td> 
+                        {{ order.fecha.slice(0,10) }} --- {{ order.fecha.slice(11, 19) }} 
+                    </td>
 
                 </tr>
 

@@ -24,11 +24,12 @@
                 </button>
 
             </div>
-            <p> Valor total: <strong> {{ precio }}  </strong> </p>
+            <p> Valor total: <strong> {{ pinia.productoParaVerificar.precio }}  </strong> </p>
             <p class="panel-verify-data-descripcion"> {{ pinia.productoParaVerificar.descripcion }} </p>
             <div class="panel-verify-data-confirm">
-                <button @click="emits('verificar')"> Cancelar </button>
-                <button @click="cargarDatos"> Confirmar </button>
+                <button @click="emits('verificar'); unidades = 1"> Cancelar </button>
+                <button v-show="pinia.sesionIniciada" @click="cargarDatos"> Confirmar </button>
+                <button v-show="!pinia.sesionIniciada" @click="enrutado.push('/iniciar_sesion')"> Iniciar sesion </button>
             </div>
         </div>
 
@@ -39,26 +40,38 @@
 <script lang="ts" setup>
 
     import { ref, defineEmits } from 'vue';
-    import { useStore } from '../store/pinia'; 
+    import { useStore } from '../store/pinia';
+    import { useRouter } from 'vue-router';
 
+    const enrutado = useRouter()
     const emits = defineEmits(['verificar'])
     const pinia = useStore()
 
     let unidades = ref(1)
 
-    let precio = ref(pinia.productoParaVerificar.precio)
-
     const sumar = () => {
 
+        const precioNormal = pinia.precioProducto.replace(/[.]/g, '')
+        const precioFormateado = parseFloat(precioNormal)
+
         unidades.value++
-        precio.value = unidades.value * pinia.productoParaVerificar.precio
+        const total = unidades.value * precioFormateado
+
+        let opciones = { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 };
+        pinia.productoParaVerificar.precio = total.toLocaleString('es-ES', opciones);
 
     }
 
     const restar = () => {
 
-        unidades.value -= 1
-        precio.value = unidades.value * pinia.productoParaVerificar.precio
+        const precioNormal = pinia.precioProducto.replace(/[.]/g, '')
+        const precioFormateado = parseFloat(precioNormal)
+
+        unidades.value--
+        const total = unidades.value * precioFormateado
+
+        let opciones = { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 };
+        pinia.productoParaVerificar.precio = total.toLocaleString('es-ES', opciones);
 
     }
 
@@ -68,7 +81,7 @@
 
         for(let i of pinia.carritoUsuario){
 
-            if(i.nombre == pinia.productoParaVerificar.nombre){
+            if(i.id == pinia.productoParaVerificar.id){
 
                 i.unidades += unidades.value
                 productoRepetido = true
@@ -80,17 +93,29 @@
 
         if(!productoRepetido){
 
+            const precioNormal = pinia.precioProducto.replace(/[.]/g, '')
+            const precioFormateado = parseFloat(precioNormal) * unidades.value
+
             pinia.carritoUsuario.push({
 
                 "id": pinia.productoParaVerificar.id,
                 "img": pinia.productoParaVerificar.imagen,
                 "nombre": pinia.productoParaVerificar.nombre,
-                "precio": pinia.productoParaVerificar.precio,
+                "precio": precioFormateado.toString(),
                 "unidades": unidades.value
 
             })       
 
         }
+
+        pinia.carritoUsuario.forEach(prd => {
+
+            const precioNormal = prd.precio.replace(/[.]/g, '')
+            const precioFormateado = parseFloat(precioNormal).toString()
+
+            prd.precio = precioFormateado
+
+        })
 
         const peticion = fetch(`http://localhost:8000/api/Usuario/${pinia.informacionUsuario.id}/`, {
 
@@ -104,7 +129,10 @@
 
         })
 
-        pinia.precioTotalCarrito += pinia.productoParaVerificar.precio * unidades.value
+        let opciones = { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 };
+        pinia.precioTotalCarritoFormateado = pinia.precioTotalCarrito.toLocaleString('es-ES', opciones)
+
+        unidades.value = 1
 
         return peticion
 
@@ -112,14 +140,18 @@
 
     const cargarDatos = async () => {
 
+        pinia.cargando = true
+
         try{
 
             await verificarCompra()
+            await pinia.traerInformacionUsuario()
             emits('verificar')
+            pinia.cargando = false
 
         }catch(e){
 
-            console.log(e)
+            pinia.cargando = true
 
         }
 
@@ -139,13 +171,15 @@
         position: absolute;
         z-index: 10000;
         display: flex;
+        align-items: center;
         justify-content: space-evenly;
         outline: 3px solid #000;
 
         &-img{
 
            width: 40%;
-           height: 100%;
+           height: 85%;
+           padding: 15px;
            border-right: 2px solid #000;
            box-sizing: border-box;
 
@@ -240,6 +274,18 @@
                     border-radius: 15px;
                     border: 0;
                     background: #0fa;
+                    color: #fff;
+                    font-weight: bold;
+                    cursor: pointer;
+
+                }
+
+                button:nth-child(3){
+
+                    padding: 15px;
+                    border-radius: 15px;
+                    border: 0;
+                    background: #0af;
                     color: #fff;
                     font-weight: bold;
                     cursor: pointer;

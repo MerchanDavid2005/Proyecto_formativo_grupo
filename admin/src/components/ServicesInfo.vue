@@ -33,7 +33,7 @@
                 <tr v-for="(service, i ) in pinia.listaServiciosFilter" :key="i">
 
                     <td> {{ service.nombre }} </td>
-                    <td> {{ service.descripcion }} </td>
+                    <div class="descripcion"> {{ service.descripcion }} </div>
                     <td> {{ service.precio }} </td>
                     <td>
                         <v-icon @click="editarServicio(i)" class="update" name="bi-pencil-square" scale="2"></v-icon>
@@ -135,14 +135,21 @@
 
             td, td{
 
-                @include celdas('15%')
+                @include celdas('15%');
 
             }
 
-            td:nth-child(2), th:nth-child(2){
+            th:nth-child(2){
 
                 @include celdas('40%');
-                text-align: center;
+
+            }
+
+            .descripcion{
+
+                @include celdas('100%');
+                height: 200px;
+                overflow: auto;
 
             }
 

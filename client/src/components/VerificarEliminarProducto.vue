@@ -23,9 +23,9 @@
 
     const eliminar = async () => {
 
-        pinia.carritoUsuario = pinia.carritoUsuario.slice(pinia.idProductoEliminar, 1)
+        pinia.carritoUsuario = pinia.informacionUsuario.carrito.filter(prd => prd.id != pinia.idProductoEliminar)
 
-        const peticion = fetch(`http://localhost:800/api/Usuario/${pinia.informacionUsuario.id}/`, {
+        const peticion = fetch(`http://localhost:8000/api/Usuario/${pinia.informacionUsuario.id}/`, {
 
             method: 'PATCH',
             body: JSON.stringify({
@@ -72,18 +72,15 @@
         font-weight: bold;
         display: flex;
         flex-direction: column;
+        position: absolute;
+        z-index: 1000000;
 
         h1{
 
-            margin: 20px 0;
+            margin: 15px 0;
 
         }
 
-        p{
-
-            margin: 10px 0;
-
-        }
 
         &-botones{
 
@@ -98,6 +95,8 @@
                 border-radius: 15px;
                 background: #fff;
                 font-weight: lighter;
+                margin: 20px 10px 0 0;
+                cursor: pointer;
 
             }
 

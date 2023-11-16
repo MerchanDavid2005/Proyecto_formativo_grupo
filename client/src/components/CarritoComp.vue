@@ -4,15 +4,17 @@
 
         <div class="carrito-comp-title">
             <h1> Carrito de compras </h1>
-            <h1> Precio total del carrito: <span> $ </span> <span> {{ pinia.precioTotalCarrito }} </span> </h1>
+            <h1> Precio total del carrito: <span> $ </span> <span> {{ pinia.precioTotalCarritoFormateado }} </span> </h1>
         </div>
-
+        <div class="carrito-comp-button">
+            <button @click="emits('cotizar')"> Realizar cotizacion </button>
+        </div>
         <table>
             <thead>
                 <tr>
                     <th> Producto </th>
                     <th> Nombre </th>
-                    <th> Precio unidad </th>
+                    <th> Precio total </th>
                     <th> Cantidad </th>
                     <th> Eliminar </th>
                 </tr>
@@ -32,7 +34,7 @@
                         {{ prd.unidades }}
                     </td>
                     <td>
-                        <v-icon @click="eliminar(i)" style="color:#f00; cursor:pointer;" name="md-deleteforever" scale="3.5"></v-icon>
+                        <v-icon @click="eliminar(prd.id)" style="color:#f00; cursor:pointer;" name="md-deleteforever" scale="3.5"></v-icon>
                     </td>
                 </tr>
             </tbody>
@@ -48,7 +50,7 @@
     import { defineEmits } from 'vue';
     import { useStore } from '../store/pinia'
 
-    const emits = defineEmits(['verificar'])
+    const emits = defineEmits(['verificar', 'cotizar'])
     const pinia = useStore()
 
     const eliminar = (id: number) => {
@@ -76,12 +78,40 @@
             height: max-content;
             display: grid;
             grid-template-columns: repeat(2, 50%);
-            margin: 5% 0 5% 0;
+            margin: 5% 0 2% 0;
 
             h1{
 
                 padding-left: 5%;
 
+            }
+
+        }
+
+        &-button{
+
+            width: 100%;
+            height: max-content;
+            padding-left: 2.5%;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+
+            button{
+
+                border: 0;
+                border-radius: 15px;
+                padding: 15px;
+                background: #0af;
+                color: #fff;
+                font-weight: bold;
+                cursor: pointer;
+
+            }
+
+            button:hover{
+
+                background: #09f;
+    
             }
 
         }

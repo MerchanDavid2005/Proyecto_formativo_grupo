@@ -51,6 +51,8 @@ def get_products(request):
 
     for i in productos:
 
+        numero_formateado = '{:,.2f}'.format(i.precio).replace(',','_').replace('.',',').replace('_','.')
+
         lista_productos.append({
 
             "id": i.id,
@@ -59,7 +61,7 @@ def get_products(request):
             "imagen": "http://127.0.0.1:8000/media/" + i.imagen.name,
             "descripcion": i.descripcion,
             "cantidad": i.cantidad,
-            "precio": i.precio
+            "precio": numero_formateado
 
         })
 
@@ -71,6 +73,8 @@ def get_product_id(request, id):
 
     datos_producto = {}
 
+    numero_formateado = '{:,.2f}'.format(producto.precio).replace(',','_').replace('.',',').replace('_','.')
+
     datos_producto = {
 
         "id": producto.id,
@@ -79,11 +83,113 @@ def get_product_id(request, id):
         "imagen": "http://localhost:8000/media/" + producto.imagen.name,
         "descripcion": producto.descripcion,
         "cantidad": producto.cantidad,
-        "precio": producto.precio
+        "precio": numero_formateado
 
     }
 
     return JsonResponse(datos_producto)
+
+def get_services(request):
+
+    servicios = Servicio.objects.all()
+
+    lista_servicios = []
+
+    for i in servicios:
+
+        numero_formateado = '{:,.2f}'.format(i.precio).replace(',','_').replace('.',',').replace('_','.')
+
+        lista_servicios.append({
+
+            "id": i.id,
+            "nombre": i.nombre,
+            "imagen": "http://localhost:8000/media/" + i.imagen.name,
+            "descripcion": i.descripcion,
+            "precio": numero_formateado
+
+        })
+
+    return JsonResponse({"servicios": lista_servicios})
+
+def get_orders(request):
+
+    pedidos = Pedido.objects.all()
+
+    lista_pedidos = []
+
+    for i in pedidos:
+
+        lista_productos_pedidos = json.loads(i.productos)
+        lista_productos = []
+
+        for p in lista_productos_pedidos:
+
+            lista_productos.append("{}: {}".format(p["nombre"], p["unidades"]))
+
+        lista_pedidos.append({
+
+            "id": i.id,
+            "productos": lista_productos,
+            "fecha": i.fecha,
+            "usuario": i.usuario.nombre
+
+        })
+
+    return JsonResponse({"pedidos": lista_pedidos})
+
+def get_orders_user(request, id):
+
+    pedidos_usuario = Pedido.objects.filter(usuario = id)
+
+    lista_pedidos = []
+
+    for i in pedidos_usuario:
+
+        lista_productos_pedidos = json.loads(i.productos)
+        
+        productos = [{"img": lista_productos_pedidos[0]["img"]}]
+
+        lista_pedidos.append({
+
+            "id": i.id,
+            "productos": productos,
+            "fecha": i.fecha,
+            "usuario": i.usuario.nombre
+
+        })
+
+    return JsonResponse({"pedidos": lista_pedidos})
+
+def get_order_id(request, id):
+
+    pedido = Pedido.objects.get(id = id)
+
+    productos = json.loads(pedido.productos)
+    lista_productos = []
+
+    for i in productos:
+
+        lista_productos.append({
+
+            "id": i["id"],
+            "nombre": i["nombre"],
+            "img": i["img"],
+            "unidades": i["unidades"],
+            "precio": i["precio"]
+
+        })
+
+    info_pedido = {
+
+        "id": pedido.id,
+        "usuario": pedido.usuario.nombre,
+        "productos": lista_productos,
+        "fecha": pedido.fecha
+
+    }
+
+    return JsonResponse(info_pedido)
+    
 
 def eliminar_imagen(request, id, modelo):
 
@@ -112,10 +218,19 @@ def eliminar_imagen(request, id, modelo):
     return HttpResponse("Imagen Eliminada")
 
 @csrf_exempt
-def generar_token(request):
+def generar_token(request, rol):
 
     informacionUsuario = json.loads(request.body)
-    usuarios = Usuario.objects.filter(rol = "Administrador")
+
+    usuarios = []
+
+    if rol == "cliente":
+
+        usuarios = Usuario.objects.filter(rol = "Cliente")
+
+    else: 
+
+        usuarios = Usuario.objects.filter(rol = "Administrador")
 
     token = ""
 
@@ -150,6 +265,8 @@ def crear_usuario(request, tipo):
 
     caracteres = random.sample(lista_caracteres, k=6)
 
+    titulo = ""
+
     for i in caracteres:
 
         codigo += i
@@ -158,11 +275,13 @@ def crear_usuario(request, tipo):
 
         descripcion = "el usuario {} con el correo {}, quiere registrarse como administrador, el siguiente codigo sera el ultimo paso para registrar al usuario".format(nombre_usuario, email_usuario)
         receptor_correo = settings.EMAIL_HOST_USER
+        titulo = "Nuevo usuario admin"
 
     else:
 
         descripcion = "Este es el ultimo paso para estar completamente registrado en serviteca la estacion, solo necesitas copiar el siguiente codigo e ingresarlo en el campo correspondiente"
         receptor_correo = email_usuario
+        titulo = "Bienvenid@ {}".format(nombre_usuario)
 
     asunto = 'Codigo de verificacion'
     mensaje = """
@@ -171,7 +290,7 @@ def crear_usuario(request, tipo):
         <body>
             <div style='padding:30px; height:300px; background:#eee; border-radius:30px'>
 
-                <h1 style='text-align:center; font-size:45px;'> Nuevo usuario admin </h1> 
+                <h1 style='text-align:center; font-size:45px;'> {} </h1> 
                 <p style='font-size:15px; text-align:center;'> {} </p>
                 <p style='text-align:center; font-weight:bold; font-size:40px;'> 
                     Codigo: <span> {} </span> 
@@ -180,9 +299,9 @@ def crear_usuario(request, tipo):
             </div>
         </body>
     <html>
-    """.format(descripcion, codigo)
+    """.format(titulo, descripcion, codigo)
     emisor = settings.EMAIL_HOST_USER
-    remitente = ["merchangonzalezjuandavid@gmail.com"]
+    remitente = [receptor_correo]
 
     send_mail(
         asunto, 
@@ -203,11 +322,16 @@ def get_info_user(request, id):
 
     for i in infoCarrito:
 
+        numero = i["precio"].replace(".","")
+        numero_convertido = float(numero.replace(",","."))
+        numero_formateado = '{:,.2f}'.format(numero_convertido).replace(',','_').replace('.',',').replace('_','.')
+
         carrito_usuario.append({
 
+            "id": i["id"],
             "img": i["img"],
             "nombre": i["nombre"],
-            "precio": i["precio"],
+            "precio": numero_formateado,
             "unidades": i["unidades"]
 
         })
@@ -215,11 +339,47 @@ def get_info_user(request, id):
     datos_usuario = {
 
         "id": usuario.id,
+        "usuario": usuario.usuario,
         "nombre": usuario.nombre,
-        "foto": "http://localhost:8000/media" + usuario.foto.name,
+        "foto": "http://localhost:8000/media/" + usuario.foto.name,
         "email": usuario.email,
         "carrito": carrito_usuario
 
     }
 
     return JsonResponse({"usuario": datos_usuario})
+
+@csrf_exempt
+def enviar_correo_contacto(request):
+
+    informacion_correo = json.loads(request.body)
+
+    asunto = "Contacto"
+    mensaje = """
+
+    <html>
+        <body>
+            <div style='padding:30px; height:300px; background:#eee; border-radius:30px'>
+
+                <h1 style='font-size:20px;'> De: {} </h1> 
+                <h2 style='font-size:18px;'> Asunto: {} </h2> 
+                <p style='font-size:15px;'> <strong> Mensaje: </strong> {} </p>
+
+            </div>
+        </body>
+    <html>
+    """.format(informacion_correo["usuario"],informacion_correo["asunto"] ,informacion_correo["mensaje"])
+    emisor = settings.EMAIL_HOST_USER
+    remitente = ["merchangonzalezjuandavid@gmail.com"]
+
+    send_mail(
+        asunto, 
+        '', 
+        emisor,
+        remitente,
+        html_message=mensaje
+    )
+
+    return JsonResponse({"mensaje": "Realizado"})
+
+

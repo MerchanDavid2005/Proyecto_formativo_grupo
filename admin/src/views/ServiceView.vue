@@ -51,7 +51,6 @@
 
     width: 90%;
     height: 100%;
-    padding: 1%;
     position: static;
     z-index: 10;
 

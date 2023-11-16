@@ -26,11 +26,15 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('get/products/', views.get_products, name="Traer productos"),
     path('get/product/id/<int:id>/', views.get_product_id),
+    path('get/services/', views.get_services),
+    path('get/orders/', views.get_orders),
+    path('get/orders/user/<int:id>/', views.get_orders_user),
+    path('get/order/id/<int:id>/', views.get_order_id),
     path('delete/img/<int:id>/<str:modelo>/', views.eliminar_imagen, name="Eliminar cualquier imagen"),
-    path('get/token/', views.generar_token),
+    path('get/token/<str:rol>/', views.generar_token),
     path('send/email/<str:tipo>/', views.crear_usuario),
     path('get/info/user/<int:id>/', views.get_info_user),
-    
+    path('send/contact/', views.enviar_correo_contacto)
 ]
 
 if settings.DEBUG:

@@ -26,7 +26,7 @@
 
                 <li>
 
-                    <router-link class="url" to="/productos"> Servicios </router-link>
+                    <router-link class="url" to="/servicios"> Servicios </router-link>
                     
                 </li>
 
@@ -42,13 +42,37 @@
                     
                 </li>
 
-                <li>
+                <li class="url-panel">
 
-                    <router-link class="url" to="/"> 
+                    <router-link v-show="!pinia.sesionIniciada" class="url" to="/iniciar_sesion"> 
                         
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5bnFxG9BRaMl2_J9i0uIYO0OwySZ2gvNqCfoPwgc&s" alt=""> 
+                        <img src="../assets/usuario-sin-foto.png" alt=""> 
                     
                     </router-link>
+
+                    <div @click="panel = !panel" v-show="pinia.sesionIniciada" class="url"> 
+                        
+                        <img :src="pinia.informacionUsuario.foto" alt=""> 
+                    
+                    </div>
+
+                    <div class="panel" v-show="panel">
+
+                        <ul>
+
+                            <li @click="enrutado.push('/perfil'); panel = false">
+                                Cuenta
+                            </li>
+                            <li @click="enrutado.push('/pedidos'); panel = false">
+                                Pedidos
+                            </li>
+                            <li @click="cerrarSesion">
+                                Cerrar sesion
+                            </li>
+
+                        </ul>
+
+                    </div>
                     
                 </li>
 
@@ -62,7 +86,35 @@
 
 <script lang="ts" setup>
 
+    import { useStore } from '../store/pinia'
+    import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
 
+    const enrutado = useRouter()
+    const pinia = useStore()
+
+    let panel = ref(false)
+
+    const cerrarSesion = () => {
+
+        pinia.informacionUsuario = {
+
+            id: 1,
+            nombre: "XXX",
+            usuario: "XXX",
+            email: "XXX",
+            foto: "XXX",
+            password: "XXX",
+            carrito: []
+
+        }
+
+        panel.value = false
+        pinia.sesionIniciada = false
+        localStorage.removeItem("token")
+        enrutado.push('/')
+
+    }
 
 </script>
 
@@ -115,7 +167,8 @@
                     font-size: 22px;
                     color: #fff;
                     text-decoration: none;
-                    
+                    cursor: pointer;
+
                     img{
 
                         border-radius: 100%;
@@ -134,6 +187,49 @@
 
                     justify-self: end;
                     padding-right: 25%;
+
+                }
+
+                .url-panel{
+
+                    display: flex;
+                    justify-content: center;
+
+                    .panel{
+
+                        width: 10%;
+                        box-sizing: border-box;
+                        position: absolute;
+                        z-index: 10000;
+                        top: 10vh;
+                        color: #000;
+                        background: #0af;
+
+                        ul{
+
+                            display: flex;
+                            flex-direction: column;
+
+                            li{
+
+                                text-align: center;
+                                width: 100%;
+                                line-height: 60px;
+                                color: #fff;
+                                cursor: pointer;
+
+                            }
+
+                            li:hover{
+
+                                background: #09f;
+
+                            }
+
+                        }
+    
+                    }
+    
 
                 }
 

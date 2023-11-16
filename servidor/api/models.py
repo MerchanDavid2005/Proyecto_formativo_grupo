@@ -25,7 +25,7 @@ class Producto(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, null=False)
     descripcion = models.TextField(null=False)
     cantidad = models.IntegerField()
-    precio = models.FloatField()
+    precio = models.DecimalField(null=False, max_digits=15, decimal_places=2)
     imagen = models.ImageField(upload_to='producto/')
 
     def __str__(self) -> str:
@@ -41,5 +41,5 @@ class Servicio(models.Model):
 
     nombre = models.CharField(max_length=255, null=False)
     imagen = models.ImageField(upload_to='servicios/')
-    descripcion = models.TextField()
-    precio = models.FloatField()
+    descripcion = models.TextField(null=False)
+    precio = models.DecimalField(null=False, max_digits=15, decimal_places=2)

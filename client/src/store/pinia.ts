@@ -6,7 +6,7 @@ type Producto = {
   nombre: string,
   descripcion: string,
   cantidad: number,
-  precio: number,
+  precio: string,
   imagen: string,
   categoria: string
 
@@ -25,7 +25,7 @@ type Servicio = {
   nombre: string,
   imagen: string,
   descripcion: string,
-  precio: number
+  precio: string
 
 }
 
@@ -34,7 +34,7 @@ type Carrito = {
   readonly id: number,
   img: string,
   nombre: string,
-  precio: number,
+  precio: string,
   unidades: number
 
 }
@@ -42,10 +42,21 @@ type Carrito = {
 type Usuario = {
 
   readonly id: number,
+  usuario: string,
   nombre: string,
   foto: string,
   email: string,
+  password: string,
   carrito: Carrito []
+
+}
+
+type Pedido = {
+
+  readonly id: number,
+  usuario: string,
+  productos: Carrito [],
+  fecha: string
 
 }
 
@@ -57,6 +68,7 @@ export const useStore = defineStore('storeId', {
       listaProductos: [] as Producto [],
       listaCategorias: [] as Categoria [],
       listaServicios: [] as Servicio [],
+      listaPedidos: [] as Pedido [],
 
       listaProductosFiltrar: [] as Producto [],
 
@@ -64,8 +76,10 @@ export const useStore = defineStore('storeId', {
       carritoUsuario: [] as Carrito [],
 
       precioTotalCarrito: 0 as number,
+      precioTotalCarritoFormateado: "" as string,
 
       idProductoEliminar: 0 as number,
+      informacionPedido: {} as Pedido,
 
       productoParaVerificar: {
 
@@ -75,9 +89,16 @@ export const useStore = defineStore('storeId', {
         descripcion: "XXXXXXXX",
         imagen: "XXXXXX",
         cantidad: 1,
-        precio: 1
+        precio: "1.00"
 
       } as Producto,
+
+      precioProducto: "" as string,
+      codigoVerificacion: "" as string,
+      datosUsuarioNuevo: {} as Usuario,
+      idUsuario: 0 as number,
+      sesionIniciada: false as boolean,
+      cargando: false as boolean,
 
     }
 
@@ -103,6 +124,7 @@ export const useStore = defineStore('storeId', {
       const res = await peticion.json()
 
       this.productoParaVerificar = res
+      this.precioProducto = res.precio
 
     },
 
@@ -118,23 +140,50 @@ export const useStore = defineStore('storeId', {
 
     async traerServicios(){
 
-      const peticion = await fetch("http://localhost:8000/api/Servicio/")
+      const peticion = await fetch("http://localhost:8000/get/services/")
 
       const res = await peticion.json()
 
-      this.listaServicios = res
+      this.listaServicios = res.servicios
+
+    },
+
+    async traerPedidos(){
+
+      const peticion = await fetch(`http://localhost:8000/get/orders/user/${this.informacionUsuario.id}/`)
+
+      const res = await peticion.json()
+
+      this.listaPedidos = res.pedidos
+      console.log(this.listaPedidos)
 
     },
 
     async traerInformacionUsuario(){
 
-      const peticion = await fetch("http://localhost:8000/get/info/user/1/")
+      const peticion = await fetch(`http://localhost:8000/get/info/user/${this.idUsuario}/`)
 
       const res = await peticion.json()
 
       this.informacionUsuario = res.usuario
 
-      this.carritoUsuario = res.usuario.carrito
+      this.carritoUsuario = res.usuario.carrito.reverse()
+
+      this.precioTotalCarrito = 0
+
+      this.carritoUsuario.forEach(prd => {
+
+        const precioNormal = prd.precio.replace(/[.]/g, '')
+
+        const precioFormateado = parseFloat(precioNormal)
+
+        this.precioTotalCarrito += precioFormateado
+
+      })
+
+      const numero = this.precioTotalCarrito
+      const opciones = { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 };
+      this.precioTotalCarritoFormateado = numero.toLocaleString('es-ES', opciones);
 
     }
 

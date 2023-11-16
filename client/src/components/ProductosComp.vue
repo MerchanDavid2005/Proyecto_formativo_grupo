@@ -75,7 +75,6 @@
         try{
 
             await pinia.traerProductoPorId(id)
-            await pinia.traerInformacionUsuario()
             emits('verificar')
 
         }catch(e){
