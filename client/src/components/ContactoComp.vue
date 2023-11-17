@@ -78,6 +78,7 @@
         box-shadow: 1px 1px 5px 0px #888888;
         display: flex;
         flex-direction: column;
+        border-radius: 10px;
 
         h1{
 
