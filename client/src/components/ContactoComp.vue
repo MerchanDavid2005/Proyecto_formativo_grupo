@@ -75,7 +75,8 @@
         width: 25%;
         height: max-content;
         padding: 25px;
-        box-shadow: 1px 1px 5px 0px #888888;
+        border-radius: 15px;
+        outline: 1px solid #000;
         display: flex;
         flex-direction: column;
 

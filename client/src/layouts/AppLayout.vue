@@ -16,16 +16,6 @@
 
             </div>
 
-            <div class="content-whatsapp">
-                
-                <a href="https://w.app/ApWXCU " target="_blank"> 
-                    
-                    <v-icon class="icono-whatsapp" name="fa-whatsapp-square" scale="3"></v-icon> 
-                
-                </a>
-                
-            </div>
-
             <div class="content-carga">
                 
                 <ComponenteDeCargaVue v-show="pinia.cargando" />
@@ -84,31 +74,6 @@
                 height: 100%;
                 position: static;
                 z-index: 10;
-
-            }
-
-            &-whatsapp{
-
-                position: absolute;
-                z-index: 1000;
-                bottom: 3%;
-                right: 2%;
-                width: max-content;
-                height: max-content;
-                
-                .icono-whatsapp{
-
-                    color: #0f0;
-                    background: #fff;
-
-                }
-
-
-                a:hover{
-
-                    color: #009900;
-
-                }
 
             }
 

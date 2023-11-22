@@ -3,6 +3,9 @@
     <div class="panel-login">
 
         <h1 class="panel-login-title"> Registrarse </h1>
+        <transition name="error">
+            <p v-show="error" class="error"> Credenciales incorrectas </p>
+        </transition>
         <div class="panel-login-body">
             <label> Ingresa tu usuario:  </label>
             <input v-model="usuario" type="text" placeholder="Usuario">
@@ -29,6 +32,8 @@
 
     let usuario = ref("")
     let password = ref("")
+
+    let error = ref(false)
 
     async function token(){
 
@@ -70,7 +75,12 @@
 
         }else{
 
-            alert("Credenciales incorrectas")
+            error.value = true
+            setTimeout(() => {
+
+                error.value = false
+
+            }, 3500)
 
         }
 
@@ -106,6 +116,14 @@
 
         }
 
+        .error{
+
+            text-align: center;
+            margin: 10px 0;
+            color: #f05;
+
+        }
+
         &-body{
 
             width: 100%;
@@ -134,6 +152,19 @@
             width: max-content;
 
         }
+
+    }
+
+    .error-enter-active, .error-leave-active{
+
+        transition: all 1s ease;
+
+    }
+
+    .error-enter-from, .error-leave-to{
+
+        transform: translateX(-30px);
+        opacity: 0;
 
     }
 

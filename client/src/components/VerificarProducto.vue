@@ -44,7 +44,7 @@
     import { useRouter } from 'vue-router';
 
     const enrutado = useRouter()
-    const emits = defineEmits(['verificar'])
+    const emits = defineEmits(['verificar', 'exito', 'error'])
     const pinia = useStore()
 
     let unidades = ref(1)
@@ -148,10 +148,22 @@
             await pinia.traerInformacionUsuario()
             emits('verificar')
             pinia.cargando = false
+            emits('exito')
+            setTimeout(() => {
+
+                emits('exito')
+
+            }, 3500)
 
         }catch(e){
 
-            pinia.cargando = true
+            pinia.cargando = false
+            emits('error')
+            setTimeout(() => {
+
+                emits('error')
+
+            }, 3500)
 
         }
 

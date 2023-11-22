@@ -21,11 +21,12 @@
 
 <script lang="ts" setup>
 
-    import { ref } from 'vue';
+    import { ref, defineEmits } from 'vue';
     import { useRouter } from 'vue-router';
     import { jwtDecode } from 'jwt-decode'
     import { useStore } from '../store/pinia'
 
+    const emits = defineEmits(['error'])
     const pinia = useStore()
     const enrutado = useRouter()
 
@@ -134,8 +135,13 @@
 
         }catch(e){
 
-            console.log(e)
             pinia.cargando = false
+            emits('error')
+            setTimeout(() => {
+
+                emits('error')
+
+            }, 3500)
 
         }
 

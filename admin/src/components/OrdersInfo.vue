@@ -6,9 +6,17 @@
         <div class="orders-info-search">
 
             <label> Buscar por usuario: </label>
-            <input type="text" placeholder="Nombre de usuario">
-            <button> Buscar </button>
-            <button @click="pinia.listaServiciosFilter = pinia.listaServicios"> Todo </button>
+            <input v-model="usuario" type="text" placeholder="Nombre de usuario">
+            <button @click="filtrarUsuario"> Buscar </button>
+            <label> Buscar por mes </label>
+            <select v-model="mes">
+                <option v-for="(mes, i) in meses" :key="i" :value="mes.id"> {{ mes.mes }} </option>
+            </select>
+            <label> Buscar por año </label>
+            <select v-model="año">
+                <option v-for="(year, i) in años" :key="i" :value="year"> {{ year }} </option>
+            </select>
+            <button @click="pinia.listaPedidosFilter = pinia.listaPedidos"> Todo </button>
 
         </div>
         
@@ -28,7 +36,7 @@
 
             <tbody>
 
-                <tr v-for="(order, i ) in pinia.listaPedidos" :key="i">
+                <tr v-for="(order, i ) in pinia.listaPedidosFilter" :key="i">
 
                     <td> {{ order.usuario }} </td>
                     <td>
@@ -52,8 +60,88 @@
 <script setup>
 
     import { useStore } from '@/store/pinia'
+    import { ref, onMounted, watch } from 'vue';
 
     const pinia = useStore()
+
+    let usuario = ref("")
+    let mes = ref("01")
+    let año = ref("2022")
+
+    let meses = [
+
+        {id: "01", mes: "Enero"},
+        {id: "02", mes: "Febrero"},
+        {id: "03", mes: "Marzo"},
+        {id: "04", mes: "Abril"},
+        {id: "05", mes: "Mayo"},
+        {id: "06", mes: "Junio"},
+        {id: "07", mes: "Julio"},
+        {id: "08", mes: "Agosto"},
+        {id: "09", mes: "Septiembre"},
+        {id: "10", mes: "Octubre"},
+        {id: "11", mes: "Noviembre"},
+        {id: "12", mes: "Diciembre"},
+
+    ]
+
+    let años = ref([
+
+        "2022",
+
+    ])
+
+    const filtrarUsuario = () => {
+
+        pinia.listaPedidosFilter = pinia.listaPedidos.filter(order => 
+        
+            order.usuario.toLowerCase().startsWith(usuario.value.toLowerCase())
+
+        )
+
+    }
+
+    watch(mes, () => {
+
+        pinia.listaPedidosFilter = pinia.listaPedidos.filter(order => 
+        
+            order.fecha.slice(5, 7) == mes.value && order.fecha.slice(0, 4) == año.value 
+
+        )
+
+    })
+
+    watch(año, () => {
+
+        pinia.listaPedidosFilter = pinia.listaPedidos.filter(order => 
+
+            order.fecha.slice(5, 7) == mes.value && order.fecha.slice(0, 4) == año.value 
+
+        )
+
+    })
+
+    onMounted(() => {
+
+        for(let i of pinia.listaPedidos){
+
+            let añoRepetido = false
+
+            for(let a of años.value){
+
+                (i.fecha.slice(0, 4) == a) ? (añoRepetido = true) : añoRepetido = false
+
+            }
+
+            if(!añoRepetido){
+                
+                años.value.push(i.fecha.slice(0, 4))
+
+            }
+
+        }
+
+    })
 
 </script>
 
@@ -80,15 +168,27 @@
 
             align-self: flex-start;
             display: flex;
-            width: 50%;
+            width: 100%;
             margin-bottom: 50px;
             align-items: center;
+
+            label{
+
+                margin: 0 10px
+
+            }
 
             input{
 
                 @include inputs();
-                margin: 0 10px;
-                width: 40%
+                width: 20%
+
+            }
+
+            select{
+
+                @include inputs();
+                width: 10%
 
             }
 

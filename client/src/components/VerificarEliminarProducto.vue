@@ -18,7 +18,7 @@
     import { defineEmits } from 'vue';
     import { useStore } from '../store/pinia'
 
-    const emits = defineEmits(['verificar'])
+    const emits = defineEmits(['verificar', 'exito', 'error'])
     const pinia = useStore()
 
     const eliminar = async () => {
@@ -43,15 +43,31 @@
 
     const cargarPagina = async () => {
 
+        pinia.cargando = true
+
         try{
 
             await eliminar()
             await pinia.traerInformacionUsuario()
+            pinia.cargando = false
             emits('verificar')
+            emits('exito')
+            setTimeout(() => {
+
+                emits('exito')
+
+            }, 3500)
 
         }catch(e){
 
-            console.log(e)
+            pinia.cargando = false
+            emits('verificar')
+            emits('error')
+            setTimeout(() => {
+
+                emits('error')
+
+            }, 3500)
 
         }
 

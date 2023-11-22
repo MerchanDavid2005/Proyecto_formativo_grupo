@@ -3,6 +3,7 @@
     <div class="panel-codigo-verificacion">
 
         <h1> Codigo de verificacion </h1>
+        <p class="error" v-show="error"> Codigo incorrecto </p>
         <p> Te llegara un correo al correo electronico ingresado, este contendra el codigo de verificacion que debes ingresar en el siguiente campo </p>
         <input v-model="codigo" type="text" placeholder="XXXXXX" maxlength="6">
         <p> Si no te ha llegado el correo puedes revisar si escribiste bien tu correo electronico </p>
@@ -13,13 +14,17 @@
 
 <script lang="ts" setup>
 
-    import { ref, watch } from 'vue';
+    import { ref, watch, defineEmits } from 'vue';
     import { useStore } from '../store/pinia';
     import { useRouter } from 'vue-router';
 
+    const emits = defineEmits(['error'])
     const enrutado = useRouter()
     const pinia = useStore()
+
     let codigo = ref("")
+
+    let error = ref(false)
 
     async function crearUsuario(){
 
@@ -46,7 +51,7 @@
 
         }else{
 
-            console.log("XD")
+            return "Error"
 
         }
 
@@ -54,15 +59,49 @@
 
     watch(codigo, async () => {
 
+        pinia.cargando = true
+
         try{
 
-            console.log("Xd")
-            await crearUsuario()
-            enrutado.push('/iniciar_sesion')
+            const res = await crearUsuario()
+
+            if(res != "Error"){
+
+                pinia.cargando = false
+                enrutado.push('/iniciar_sesion')
+                setTimeout(() => {
+
+                    pinia.mensajeUsuarioCreado = true
+
+                }, 500)
+
+                setTimeout(() => {
+
+                    pinia.mensajeUsuarioCreado = false
+
+                }, 4000)
+
+            }else{
+
+                pinia.cargando = false
+                error.value = true
+                setTimeout(() => {
+
+                    error.value = false
+
+                }, 3500)
+
+            }
 
         }catch(e){
 
-            console.log(e)
+            pinia.cargando = false
+            emits('error')
+            setTimeout(() => {
+
+                emits('error')
+
+            }, 3500)
 
         }
 
@@ -89,6 +128,14 @@
         h1{
 
             margin: 20px 0;
+            text-align: center;
+
+        }
+
+        .error{
+
+            margin: 10px 0;
+            color: #f05;
             text-align: center;
 
         }

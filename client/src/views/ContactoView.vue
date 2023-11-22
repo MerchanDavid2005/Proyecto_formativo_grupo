@@ -2,7 +2,21 @@
 
     <div class="contacto-view">
 
-        <ContactoComp />
+        <div class="contacto-view-content">
+
+            <ContactoComp />
+
+        </div>
+
+        <div class="contacto-view-whatsapp">
+                
+            <a href="https://w.app/ApWXCU " target="_blank"> 
+                
+                <v-icon class="icono-whatsapp" name="bi-whatsapp" scale="3"></v-icon> 
+            
+            </a>
+            
+        </div>
         
     </div>
 
@@ -21,8 +35,53 @@
         width: 100%;
         height: 100%;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
+
+        &-content{
+
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: static;
+            z-index: 10;
+
+        }
+
+        &-whatsapp{
+
+            width: 100%;
+            height: 90%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            position: absolute;
+            box-sizing: border-box;
+            padding: 2%;
+
+            a{
+
+                position: absolute;
+                z-index: 1000;
+
+                .icono-whatsapp{
+
+                    color: #0f0;
+                    cursor: pointer;
+    
+                }
+
+                .icono-whatsapp:hover{
+
+                    color: #090;
+                    cursor: pointer;
+    
+                }
+
+            }
+
+        }
 
     }
 

@@ -3,6 +3,12 @@
     <div class="registrar-comp">
 
         <h1> Registrarse </h1>
+        <transition name="error">
+            <p class="error" v-show="error"> No dejes campos en blanco </p>
+        </transition>
+        <transition name="error">
+            <p class="error" v-show="errorContra"> Las contraseñas no coinciden </p>
+        </transition>
         <div class="registrar-comp-content">
             <label> Ingresa tu nombre de usuario: </label>
             <input v-model="usuario" type="text" placeholder="Nombre usuario">
@@ -29,7 +35,7 @@
     import { ref, defineEmits } from 'vue';
     import { useStore } from '../store/pinia';
 
-    const emits = defineEmits(['verificar'])
+    const emits = defineEmits(['verificar', 'error'])
     const pinia = useStore()
 
     let usuario = ref("");
@@ -39,16 +45,29 @@
     let password = ref("");
     let passwordConfirm = ref("");
 
+    let error = ref(false)
+    let errorContra = ref(false)
+
     const valorImagen = (e: any) => foto.value = e.target.files[0]
 
     const validar = () => {
 
         if(nombre.value != "" && usuario.value != "" && correo.value != "" && password.value != ""){
 
-            return true
+            if(password.value == passwordConfirm.value){
+
+                return true
+
+            }else{
+
+                errorContra.value = true
+                return false
+
+            }
 
         }else{
 
+            error.value = true
             return false
 
         }
@@ -73,7 +92,9 @@
 
             }
 
-            const peticion = await fetch("http://localhost:8000/send/email/Cliente/", {
+            try{
+
+                const peticion = await fetch("http://localhost:8000/send/email/Cliente/", {
 
                 method: 'POST',
                 body: JSON.stringify({
@@ -84,16 +105,32 @@
                 }),
                 headers: {"content-type": "application/json"}
 
-            })
+                })
 
-            const res = await peticion.json()
+                const res = await peticion.json()
 
-            pinia.codigoVerificacion = res.Codigo
+                pinia.codigoVerificacion = res.Codigo
 
+            }catch(e){
+
+                emits('verificar')
+                emits('error')
+                setTimeout(() => {
+
+                    emits('error')
+
+                }, 3500)
+
+            }
 
         }else{
 
-            print()
+            setTimeout(() => {
+
+                error.value = false
+                errorContra.value = false
+
+            }, 3000)
 
         }
 
@@ -116,10 +153,18 @@
 
         h1{
 
-            margin: 20px 0;
+            margin-top: 15px;
             text-align: center;
             color: #fff;
             font-size: 40px;
+
+        }
+
+        .error{
+
+            margin-bottom: 15px;
+            color: #f05;
+            text-align: center;
 
         }
 
@@ -130,6 +175,7 @@
             display: grid;
             grid-template-columns: 40% 55%;
             gap: 20px;
+            margin-top: 15px;
 
             label{
 
@@ -186,6 +232,19 @@
             background: #09f;
 
         }
+
+    }
+
+    .error-enter-active, .error-leave-active{
+
+        transition: all 1s ease;
+
+    }
+
+    .error-enter-from, .error-leave-to{
+
+        opacity: 0;
+        transform: translateY(-50px);
 
     }
 

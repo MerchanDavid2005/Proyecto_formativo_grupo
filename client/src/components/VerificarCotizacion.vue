@@ -19,7 +19,7 @@
     import { useStore } from '../store/pinia';
 
     const pinia = useStore()
-    const emits = defineEmits(['cotizar'])
+    const emits = defineEmits(['cotizar', 'exito', 'error'])
 
     const realizarcotizacion = async () => {
 
@@ -69,13 +69,25 @@
             await realizarcotizacion()
             await vaciarCarrito()
             await pinia.traerInformacionUsuario()
-            emits('cotizar')
             pinia.cargando = false
+            emits('cotizar')
+            emits('exito')
+            setTimeout(() => {
+
+                emits('exito')
+
+            }, 3500)
 
         }catch(e){
 
             pinia.cargando = false
             emits('cotizar')
+            emits('error')
+            setTimeout(() => {
+
+                emits('error')
+
+            }, 3500)
 
         }
 

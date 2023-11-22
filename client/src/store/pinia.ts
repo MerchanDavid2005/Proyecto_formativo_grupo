@@ -100,6 +100,11 @@ export const useStore = defineStore('storeId', {
       sesionIniciada: false as boolean,
       cargando: false as boolean,
 
+      mensajeExito: true as boolean,
+      mensajeError: false as boolean,
+      
+      mensajeUsuarioCreado: false as boolean
+
     }
 
   },
@@ -155,7 +160,6 @@ export const useStore = defineStore('storeId', {
       const res = await peticion.json()
 
       this.listaPedidos = res.pedidos
-      console.log(this.listaPedidos)
 
     },
 

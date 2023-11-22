@@ -20,6 +20,7 @@ export const useStore = defineStore('storeId', {
       listaProductosFilter: [],
       listaUsuariosFilter: [],
       listaServiciosFilter: [],
+      listaPedidosFilter: [],
 
       listaProductosPedido: [],
 
@@ -82,6 +83,7 @@ export const useStore = defineStore('storeId', {
       const data = await fetch("http://127.0.0.1:8000/get/orders/")
       const info = await data.json()
       this.listaPedidos = info.pedidos.reverse()
+      this.listaPedidosFilter = this.listaPedidos
 
     },
 

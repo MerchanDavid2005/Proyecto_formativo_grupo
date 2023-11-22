@@ -21,6 +21,7 @@
 
                 <img :src="prd.imagen" :alt="prd.nombre">
                 <p> <strong> Producto:  </strong> {{ prd.nombre }} </p>
+                <p> <strong> Categoria:  </strong> {{ prd.categoria }} </p>
                 <p> <strong> Precio: </strong> <span style="color:#00ffaa"> $ </span> {{ prd.precio }} </p>
                 <button @click="verificarProducto(prd.id)"> Agregar al carrito </button>
 
@@ -38,7 +39,7 @@
     import { ref, watch, defineEmits } from 'vue';
 
     const pinia = useStore()
-    const emits = defineEmits(['verificar'])
+    const emits = defineEmits(['verificar', 'error'])
 
     let buscado = ref("")
     let categoria = ref("Carro")
@@ -72,14 +73,23 @@
 
     const verificarProducto = async (id: number) => {
 
+        pinia.cargando = true
+
         try{
 
             await pinia.traerProductoPorId(id)
+            pinia.cargando = false
             emits('verificar')
 
         }catch(e){
 
-            console.log(e)
+            pinia.cargando = false
+            emits('error')
+            setTimeout(() => {
+
+                emits('error')
+
+            }, 3500)
 
         }
 
@@ -170,10 +180,10 @@
             &-prd{
 
                 width: 15%;
-                height: 330px;
+                height: 370px;
                 display: flex;
                 flex-direction: column;
-                align-items: center;
+                align-items: flex-start;
                 justify-content: space-evenly;
                 margin-bottom: 2%;
 
@@ -188,6 +198,7 @@
                 button{
 
                     padding: 15px;
+                    align-self: center;
                     border-radius: 15px;
                     color: #fff;
                     background: #0af;
