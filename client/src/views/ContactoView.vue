@@ -17,6 +17,22 @@
             </a>
             
         </div>
+
+        <div class="productos-view-mensaje">
+
+            <transition name="mensaje">
+            
+                <MensajeExito v-show="exito" titulo="Enviado" :texto="textoExito" />
+
+            </transition>
+
+            <transition name="mensaje">
+
+                <MensajeError v-show="error" texto="Ha habido un error, por favor revisa tu conexion a internet" />
+
+            </transition>
+
+        </div>
         
     </div>
 
@@ -25,6 +41,18 @@
 <script lang="ts" setup>
 
     import ContactoComp from '../components/ContactoComp.vue'
+
+    import { ref } from 'vue';
+
+    let exito = ref(false)
+    let error = ref(false)
+
+    let textoExito = "El mensaje se ha enviado correctamente"
+
+
+    const mensajeExito = () => exito.value = !exito.value
+
+    const mensajeError = () => error.value = !error.value
 
 </script>
 
