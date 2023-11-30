@@ -4,7 +4,7 @@
 
         <div class="contacto-view-content">
 
-            <ContactoComp />
+            <ContactoComp @exito="mensajeExito" @error="mensajeError" />
 
         </div>
 
@@ -48,7 +48,6 @@
     let error = ref(false)
 
     let textoExito = "El mensaje se ha enviado correctamente"
-
 
     const mensajeExito = () => exito.value = !exito.value
 

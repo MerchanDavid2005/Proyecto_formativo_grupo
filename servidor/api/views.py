@@ -121,9 +121,13 @@ def get_orders(request):
 
         lista_productos_pedidos = json.loads(i.productos)
         lista_productos = []
+        total = 0
 
         for p in lista_productos_pedidos:
 
+            numero = p["precio"].replace(".","")
+            numero_convertido = float(numero.replace(",","."))
+            total += numero_convertido
             lista_productos.append("{}: {}".format(p["nombre"], p["unidades"]))
 
         lista_pedidos.append({
@@ -131,7 +135,9 @@ def get_orders(request):
             "id": i.id,
             "productos": lista_productos,
             "fecha": i.fecha,
-            "usuario": i.usuario.nombre
+            "usuario": i.usuario.nombre,
+            "total": total,
+            "entregado": i.entregado 
 
         })
 

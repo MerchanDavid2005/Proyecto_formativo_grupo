@@ -36,16 +36,6 @@
 
         </div>
 
-        <div class="navLeft-tema">
-
-            <v-icon style="color: #fff; margin: 0 10px" name="fa-lightbulb" scale="1.5"></v-icon>
-            <div class="navLeft-tema-barra">
-                <div class="navLeft-tema-barra-boton"></div>
-            </div>
-            <v-icon style="color: #fff; margin: 0 10px" name="md-darkmode-round" scale="1.5"></v-icon>
-
-        </div>
-
     </div>
 </template>
 
@@ -57,7 +47,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: center;
         background: #0af;
         position: static;

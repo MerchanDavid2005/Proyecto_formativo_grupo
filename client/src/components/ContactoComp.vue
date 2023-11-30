@@ -17,10 +17,11 @@
 
 <script lang="ts" setup>
 
-    import { ref } from 'vue';
+    import { ref, defineEmits } from 'vue';
     import { useStore } from '../store/pinia';
     
     const pinia = useStore()
+    const emits = defineEmits(['exito', 'error'])
 
     let usuario = ref("")
     let asunto = ref("")
@@ -57,10 +58,22 @@
             asunto.value = ""
             mensaje.value = ""
             pinia.cargando = false
+            emits('exito')
+            setTimeout(() => {
+
+                emits('exito')
+
+            }, 3500)
 
         }catch(e){
 
             pinia.cargando = false
+            emits('error')
+            setTimeout(() => {
+
+                emits('error')
+
+            }, 3500)
 
         }
 

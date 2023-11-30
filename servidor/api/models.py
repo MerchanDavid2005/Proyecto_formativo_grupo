@@ -36,6 +36,7 @@ class Pedido(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=False)
     productos = models.TextField(null=False)
     fecha = models.DateTimeField(auto_now_add=True)
+    entregado = models.BooleanField(default=False)
 
 class Servicio(models.Model):
 

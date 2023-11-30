@@ -26,9 +26,12 @@
 
                 <tr>
 
+                    <th> Fecha </th>
                     <th> Usuario </th>
                     <th> Lista productos </th>
-                    <th> Fecha </th>
+                    <th> Precio </th>
+                    <th> Estado </th>
+                    <th> Entregar </th>
 
                 </tr>
 
@@ -38,15 +41,45 @@
 
                 <tr v-for="(order, i ) in pinia.listaPedidosFilter" :key="i">
 
+                    <td> 
+                        {{ order.fecha.slice(0,10) }} --- {{ order.fecha.slice(11, 19) }} 
+                    </td>
                     <td> {{ order.usuario }} </td>
                     <td>
                         <span v-for="(prd, i) in order.productos" :key="i">
                             {{ prd }},
                         </span>
                     </td>
-                    <td> 
-                        {{ order.fecha.slice(0,10) }} --- {{ order.fecha.slice(11, 19) }} 
+                    <td>
+                        {{ order.total }}
                     </td>
+                    <td v-if="order.entregado">
+                        Entregado
+                    </td>
+                    <td v-if="!order.entregado">
+                        No entregado
+                    </td>
+
+                    <td v-if="!order.entregado">
+                        <button @click="cargarDatos(order.id)"> Entregar </button> 
+                    </td>
+
+                    <td v-if="order.entregado">
+                        Entregado
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        Total: {{ ganancias }}
+                    </td>
+                    <td></td>
+                    <td></td>
 
                 </tr>
 
@@ -60,13 +93,14 @@
 <script setup>
 
     import { useStore } from '@/store/pinia'
-    import { ref, onMounted, watch } from 'vue';
+    import { ref, watch, onMounted } from 'vue';
 
     const pinia = useStore()
 
     let usuario = ref("")
     let mes = ref("01")
     let año = ref("2022")
+    let ganancias = ref(0)
 
     let meses = [
 
@@ -83,13 +117,67 @@
         {id: "11", mes: "Noviembre"},
         {id: "12", mes: "Diciembre"},
 
-    ]
+    ];
 
     let años = ref([
 
         "2022",
+        "2023",
+        "2024",
+        "2025",
+        "2026"
 
-    ])
+    ]);
+
+    const entregar = async (id) => {
+
+        const peticion = await fetch(`http://127.0.0.1:8000/api/Pedido/${id}/`, {
+
+            method: 'PATCH',
+            body: JSON.stringify({
+
+                entregado: true
+
+            }),
+            headers: {"content-type": "application/json"}
+
+        })
+
+        const respuesta = await peticion.json()
+
+        return respuesta
+
+    }
+
+    const cargarDatos = async (id) => {
+
+        pinia.modoEspera = true
+
+        try{
+
+            await entregar(id)
+            pinia.getOrders()
+            pinia.modoEspera = false
+            pinia.success = true
+            setTimeout(() => {
+
+                pinia.success = false
+
+            }, 3500)
+
+        }catch(e){
+
+            pinia.modoEspera = false
+            pinia.error = true
+            setTimeout(() => {
+
+                pinia.error = false
+
+            }, 3500)
+
+        }
+
+    }
 
     const filtrarUsuario = () => {
 
@@ -125,19 +213,7 @@
 
         for(let i of pinia.listaPedidos){
 
-            let añoRepetido = false
-
-            for(let a of años.value){
-
-                (i.fecha.slice(0, 4) == a) ? (añoRepetido = true) : añoRepetido = false
-
-            }
-
-            if(!añoRepetido){
-                
-                años.value.push(i.fecha.slice(0, 4))
-
-            }
+            ganancias.value += i.total
 
         }
 
@@ -208,19 +284,38 @@
 
             td, td{
 
-                @include celdas('20%')
+                @include celdas('15%');
 
             }
 
-            td:nth-child(2), th:nth-child(2){
+            td:nth-child(1), td:nth-child(1){
 
-                @include celdas('60%');
+                @include celdas('20%');
 
             }
 
-            td:nth-child(2){
+            td:nth-child(3){
 
                 text-align: left;
+                overflow: auto;
+                height: 100px;
+
+            }
+
+            td:nth-child(4), td:nth-child(4){
+
+                @include celdas('12%');
+
+            }
+
+            td{
+
+                button{
+
+                    @include botones($first-color);
+                    margin-left: 10px;
+    
+                }
 
             }
 

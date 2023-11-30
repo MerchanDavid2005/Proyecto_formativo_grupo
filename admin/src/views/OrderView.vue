@@ -36,7 +36,6 @@
     height: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 1%;
     position: static;
     z-index: 10;
 
