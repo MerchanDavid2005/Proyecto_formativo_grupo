@@ -83,7 +83,16 @@
 
             if(i.id == pinia.productoParaVerificar.id){
 
+                const precioNuevo = pinia.productoParaVerificar.precio.replace(/[.]/g, '')
+                const precioNuevoFormateado = parseFloat(precioNuevo)
+
+                const precioNormal = i.precio.replace(/[.]/g, '')
+                const precioFormateado = parseFloat(precioNormal)
+
+                const nuevoTotal = precioNuevoFormateado + precioFormateado
+
                 i.unidades += unidades.value
+                i.precio = nuevoTotal.toString()
                 productoRepetido = true
                 break
 

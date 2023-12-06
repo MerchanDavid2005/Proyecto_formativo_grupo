@@ -46,13 +46,17 @@
 
                     <router-link v-show="!pinia.sesionIniciada" class="url" to="/iniciar_sesion"> 
                         
-                        <img src="../assets/usuario-sin-foto.png" alt=""> 
+                        <div class="url-img">
+                            <img src="../assets/usuario-sin-foto.png" alt=""> 
+                        </div>
                     
                     </router-link>
 
                     <div @click="panel = !panel" v-show="pinia.sesionIniciada" class="url"> 
                         
-                        <img :src="pinia.informacionUsuario.foto" alt=""> 
+                        <div class="url-img">
+                            <img :src="pinia.informacionUsuario.foto" alt=""> 
+                        </div>
                     
                     </div>
 
@@ -168,10 +172,21 @@
                     color: #fff;
                     text-decoration: none;
                     cursor: pointer;
+                    height: 80%;
 
-                    img{
+                    &-img{
 
-                        border-radius: 100%;
+                        width: 65%;
+                        height: 20%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        img{
+
+                            border-radius: 15%;
+    
+                        }
 
                     }
 

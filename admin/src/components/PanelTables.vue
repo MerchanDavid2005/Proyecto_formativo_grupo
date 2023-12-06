@@ -30,7 +30,7 @@
         background: #fff;
         color: #000;
         width: 30%;
-        height: 65%;
+        height: max-content;
         position: absolute;
         z-index: 1000;
         outline: 2px solid #000;
